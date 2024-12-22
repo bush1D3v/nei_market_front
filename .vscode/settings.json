@@ -109,9 +109,7 @@
 		"youtube"
 	],
 	"editor.defaultFormatter": "biomejs.biome",
-	"css.customData": [
-		".vscode/css_custom_data.json"
-	],
+	"css.customData": [".vscode/css_custom_data.json"],
 	"files.autoSave": "onFocusChange",
 	"makefile.configureOnOpen": false
 }

@@ -28,10 +28,13 @@ export interface SubContent {
 }
 
 export interface Menu {
-	emoji: string;
+	titleRepresentation?: {
+		type: "emoji" | "image";
+		value: string;
+	};
 	title: string;
-	link: string;
-	subContent: SubContent[] | null;
+	link?: string;
+	subContent?: SubContent[];
 }
 
 export interface DropdownProps {
@@ -51,7 +54,7 @@ const props = defineProps<DropdownProps>();
                 {{ props.buttonTile }}
             </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent class="w-56" :class="cn(props.class)">
+        <DropdownMenuContent class="w-56 absolute -right-44" :class="cn(props.class)">
             <DropdownMenuLabel>
                 <span v-translate>
                     {{ props.label }}
@@ -60,19 +63,31 @@ const props = defineProps<DropdownProps>();
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
                 <template v-for="menu in props.menu">
-                    <RouterLink v-if="menu.subContent === null" :to="menu.link">
+                    <RouterLink v-if="!menu.subContent && menu.link" :to="menu.link">
                         <DropdownMenuItem class="group cursor-pointer flex gap-3">
-                            <span v-html="menu.emoji"></span>
+                            <span v-if="menu.titleRepresentation?.type === 'emoji'" v-html="menu.titleRepresentation.value"></span>
+                            <Image v-if="menu.titleRepresentation?.type === 'image'" :src="menu.titleRepresentation.value" alt="Logo" width="20" height="20" />
                             <span v-translate>{{ menu.title }}</span>
                         </DropdownMenuItem>
                     </RouterLink>
-                    <DropdownMenuSub v-else>
-                        <RouterLink :to="menu.link">
+                    <DropdownMenuItem v-if="!menu.link" class="group cursor-pointer flex gap-3">
+                        <span v-if="menu.titleRepresentation?.type === 'emoji'" v-html="menu.titleRepresentation.value"></span>
+                        <Image v-if="menu.titleRepresentation?.type === 'image'" :src="menu.titleRepresentation.value" alt="Logo" width="20" height="20" />
+                        <span v-translate>{{ menu.title }}</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSub v-if="menu.subContent">
+                        <RouterLink v-if="menu.link" :to="menu.link">
                             <DropdownMenuSubTrigger class="group cursor-pointer flex gap-3">
-                                <div v-html="menu.emoji"></div>
+                                <span v-if="menu.titleRepresentation?.type === 'emoji'" v-html="menu.titleRepresentation.value"></span>
+                            <Image v-if="menu.titleRepresentation?.type === 'image'" :src="menu.titleRepresentation.value" alt="Logo" width="20" height="20" />
                                 <span v-translate>{{ menu.title }}</span>
                             </DropdownMenuSubTrigger>
                         </RouterLink>
+                        <DropdownMenuSubTrigger v-if="!menu.link" class="group cursor-pointer flex gap-3">
+                            <span v-if="menu.titleRepresentation?.type === 'emoji'" v-html="menu.titleRepresentation.value"></span>
+                            <Image v-if="menu.titleRepresentation?.type === 'image'" :src="menu.titleRepresentation.value" alt="Logo" width="20" height="20" />
+                            <span v-translate>{{ menu.title }}</span>
+                        </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                             <DropdownMenuSubContent>
                                 <template v-for="subContent in menu.subContent">

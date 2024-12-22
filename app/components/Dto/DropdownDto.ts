@@ -7,7 +7,10 @@ import Wege from "@/assets/images/logo-wege.png";
 import Petrobras from "@/assets/images/logo-petra.jpg";
 export const DropdownDto: Menu[] = [
 	{
-		emoji: "&#129689;",
+		titleRepresentation: {
+			type: "emoji",
+			value: "&#129689;",
+		},
 		title: "Cripto moedas",
 		link: "/cryptos",
 		subContent: [
@@ -29,7 +32,10 @@ export const DropdownDto: Menu[] = [
 		],
 	},
 	{
-		emoji: "&#128203;",
+		titleRepresentation: {
+			type: "emoji",
+			value: "&#128188;",
+		},
 		title: "Bolsa de Valores",
 		link: "/stocks",
 		subContent: [

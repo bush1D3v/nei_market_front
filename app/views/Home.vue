@@ -70,7 +70,7 @@ onBeforeMount(async () => {
             <p v-translate class="text-text text-xl md:text-2xl text-center xl:text-start">Novo no Mundo Financeiro Digital? <strong class="text-2xl">Comece aqui!</strong></p>
             <ul class="flex flex-wrap gap-8 justify-center">
                 <li>
-                    <Card class="flex flex-col items-center gap-4 p-7 bg-purple h-[500px] max-w-[400px]">
+                    <Card class="flex flex-col items-center gap-4 p-4 md:p-7 bg-purple h-[500px] max-w-[400px]">
                         <Image :src="BitcoinNotebook" alt="Hello" width="225" height="225" />
                         <h4 v-translate class="w-full">Conhecendo o Digital</h4>
                         <p v-translate class="text-gray-200 font-semibold leading-5">
@@ -79,7 +79,7 @@ onBeforeMount(async () => {
                     </Card>
                 </li>
                 <li>
-                    <Card class="flex flex-col items-center gap-4 p-7 bg-medium h-[500px] max-w-[400px]">
+                    <Card class="flex flex-col items-center gap-4 p-4 md:p-7 bg-medium h-[500px] max-w-[400px]">
                         <Image :src="BitcoinRocket" alt="Hello" width="225" height="225" />
                         <h4 v-translate class="w-full">Começando a Investir</h4>
                         <p v-translate class="text-gray-200 font-semibold leading-5">
@@ -88,7 +88,7 @@ onBeforeMount(async () => {
                     </Card>
                 </li>
                 <li>
-                    <Card class="flex flex-col items-center gap-4 p-7 bg-primary h-[500px] max-w-[400px]">
+                    <Card class="flex flex-col items-center gap-4 p-4 md:p-7 bg-primary h-[500px] max-w-[400px]">
                         <Image :src="BitcoinEscudo" alt="Hello" width="225" height="225" />
                         <h4 v-translate class="w-full">Ferramentas NEI Market</h4>
                         <p v-translate class="text-gray-200 font-semibold leading-5">

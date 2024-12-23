@@ -3,7 +3,6 @@ import numberFormatter from "@/utils/numberFormatter";
 import {
 	Table,
 	TableBody,
-	TableCaption,
 	TableCell,
 	TableHead,
 	TableHeader,
@@ -18,6 +17,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import HomeDatasTableSkeleton from "@/components/Skeletons/components/views/Home/HomeDatasTableSkeleton.vue";
 import Button from "@/components/ui/button/Button.vue";
 import Image from "@/tags/Image.vue";
 import {listStocks} from "@/services/BrapiDev";
@@ -92,13 +92,13 @@ async function dataTypeLoader(type: "cryptos" | "stocks") {
 }
 
 async function loadMoreDatas(type: "cryptos" | "stocks") {
+    isLoadingMore.value = true;
+
     if (type === "cryptos") {
         cryptoStart.value += 12;
     } else {
         stocksPage.value ++;
     }
-
-	isLoadingMore.value = true;
 
 	try {
 		await dataTypeLoader(type);
@@ -111,9 +111,8 @@ async function loadMoreDatas(type: "cryptos" | "stocks") {
 }
 
 onMounted(async () => {
-	if (tableDatas.value.length === 0) {
-		isLoading.value = true;
-
+    if (tableDatas.value.length === 0) {
+        isLoading.value = true;
         const localDataType: "cryptos" | "stocks" | null = localStorage.getItem("dataType") as "cryptos" | "stocks" | null;
 
 		try {
@@ -122,15 +121,17 @@ onMounted(async () => {
 			console.error(err);
 			error.value = true;
 		}
-
-		isLoading.value = false;
 	}
+
+    isLoading.value = false;
 });
 
 watch(dataType, async (newVal) => {
     tableDatas.value = formatData(newVal);
     if (tableDatas.value.length === 0) {
+        isLoading.value = true;
         await dataTypeLoader(newVal);
+        isLoading.value = false;
     }
 
     localStorage.setItem("dataType", newVal);
@@ -143,7 +144,7 @@ watch(dataType, async (newVal) => {
             <span v-translate class="text-sm">Tipo de Dado</span>
             <DropdownMenu>
                 <DropdownMenuTrigger as-child>
-                    <Button v-translate variant="outline">
+                    <Button v-translate variant="outline" :disabled="isLoading">
                         Selecione
                     </Button>
                 </DropdownMenuTrigger>
@@ -178,8 +179,7 @@ watch(dataType, async (newVal) => {
             </DropdownMenu>
         </li>
     </ul>
-    <Table>
-        <TableCaption>Listagem das suas {{ dataType === "cryptos" ? "criptomoedas" : "ações" }}.</TableCaption>
+    <Table v-if="!isLoading">
         <TableHeader>
             <TableRow>
                 <TableHead class="w-52"><span v-translate>Nome</span></TableHead>
@@ -192,10 +192,10 @@ watch(dataType, async (newVal) => {
         <TableBody>
             <TableRow v-for="(data, index) in tableDatas" :key="index">
                 <TableCell>
-                    <div class="flex gap-2 items-center">
+                    <div class="flex gap-2 items-center w-40 md:w-52">
                         <Image class="rounded-full" :src="data.image" alt="Logo" width="27" height="27" />
                         <RouterLink class="cursor-pointer hover:underline" :to="`/${dataType}/${data.id}`">
-                            <h5>{{ data.name }}</h5>
+                            <h5 class="text-sm md:text-lg lg:text-xl font-semibold line-clamp-1">{{ data.name }}</h5>
                         </RouterLink>
                     </div>
                 </TableCell>
@@ -208,5 +208,8 @@ watch(dataType, async (newVal) => {
             </TableRow>
         </TableBody>
     </Table>
-    <Button class="-mt-4" @click="loadMoreDatas(dataType)">Ver mais</Button>
+    <HomeDatasTableSkeleton v-else />
+    <Button class="-mt-4" @click="loadMoreDatas(dataType)" :disabled="isLoadingMore || isLoading">
+        {{ isLoadingMore ? "Carregando..." : "Ver mais" }}
+    </Button>
 </template>

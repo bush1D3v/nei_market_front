@@ -41,7 +41,7 @@ onMounted(() => {
             <ImageSkeletonSvg />
         </Skeleton>
         <img :src="props.src" :alt="props.alt" :width="props.width" :height="props.height" :class="cn(props.class)"
-            data-testid="Image" @load="onImageLoad()" />
+            data-testid="Image" @load="onImageLoad()" loading="lazy" />
     </div>
     <div v-else :class="` flex items-center justify-center`">
         <ImageSkeletonSvg :class="`w-[${props.width}px] h-[${props.height}px]`" />

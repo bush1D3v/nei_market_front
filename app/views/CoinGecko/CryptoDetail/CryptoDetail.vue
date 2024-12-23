@@ -22,6 +22,7 @@ import type {ChartData} from "@/components/Chart/types/ChartData";
 import Image from "@/tags/Image.vue";
 import LinksList from "./components/LinksList.vue";
 import ValuesList from "./components/ValuesList.vue";
+import { t } from "i18next";
 
 const route = useRoute();
 const crypto = String(route.params.crypto);
@@ -143,7 +144,7 @@ onMounted(async () => {
                 </div>
                 <ValuesList :marketCapRank="cryptoDetailData?.market_cap_rank" :marketData="cryptoDetailData?.market_data" />
             </div>
-            <p class="line-clamp-4 md:line-clamp-6 lg:line-clamp-none" v-html="cryptoDetailData?.description.en || 'Sem Descrição'"></p>
+            <p class="line-clamp-4 md:line-clamp-6 lg:line-clamp-none" v-html="cryptoDetailData?.description.en || t('Sem Descrição')"></p>
             <ul class="flex gap-2 items-center flex-wrap">
                 <h4 v-translate>Categorias</h4>
                 <li v-for="(item, index) in cryptoDetailData?.categories" :key="item">

@@ -34,15 +34,15 @@ onBeforeMount(async () => {
 	}
 	onNewsLoading.value = false;
 
-	if (!cryptoCurrencyStore.homeCryptoCurrencies.length) {
-		await listCryptoCurrencies(5, 1, "market_cap_desc", "24h");
-	}
-	onCryptoLoading.value = false;
-
-	if (!stocksCurrencyStore.homeStockCurrencies.length) {
+	if (!stocksCurrencyStore.homeTopsTableStockCurrencies.length) {
 		await listStocks(5, 1, "change", "desc");
 	}
 	onStocksLoading.value = false;
+
+    if (!cryptoCurrencyStore.homeTopsTableCryptoCurrencies.length) {
+		await listCryptoCurrencies(5, 1, "market_cap_desc", "24h");
+	}
+	onCryptoLoading.value = false;
 });
 </script>
 
@@ -51,12 +51,12 @@ onBeforeMount(async () => {
         <ul class="flex gap-4 flex-wrap justify-center">
             <li v-if="!onCryptoLoading">
                 <HomeTopsTable icon="🪙" table-title="Moedas em alta" redirect-to="/cryptos"
-                    :coins="cryptoCurrencyStore.homeCryptoCurrencies" />
+                    :coins="cryptoCurrencyStore.homeTopsTableCryptoCurrencies" />
             </li>
             <HomeTopsTableSkeleton v-else type="cryptos" />
             <li v-if="!onStocksLoading">
                 <HomeTopsTable icon="📈" table-title="Ações em Alta" redirect-to="/stocks"
-                    :stocks="stocksCurrencyStore.homeStockCurrencies" />
+                    :stocks="stocksCurrencyStore.homeTopsTableStockCurrencies" />
             </li>
             <HomeTopsTableSkeleton v-else type="stocks" />
             <li v-if="!onNewsLoading">

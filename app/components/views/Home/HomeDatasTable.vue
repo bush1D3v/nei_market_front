@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import numberFormatter from "@/utils/numberFormatter";
+import type { CryptoCurrency } from "@/types/CoinGecko/CryptoCurrency";
+import type { Stock } from "@/types/BrapiDev/Stock";
 import {
 	Table,
 	TableBody,
@@ -27,50 +29,8 @@ import {useStocksCurrencyStore} from "@/stores/useStocksCurrencyStore";
 import {ref, onMounted, watch} from "vue";
 import { CheckIcon } from "@radix-icons/vue";
 
-const {stocksCurrencies} = useStocksCurrencyStore();
-const {cryptoCurrencies} = useCryptoCurrencyStore();
-
-interface HomeDatasTableData {
-    id: string;
-    name: string;
-    image: string;
-    price: number;
-    change: number;
-    volume: number;
-    market_cap: number;
-}
-
-function formatData(type: "cryptos" | "stocks"): HomeDatasTableData[] {
-    if (type === "cryptos") {
-        if (cryptoCurrencies.length === 0) {
-            return [];
-        }
-
-        return cryptoCurrencies.map((crypto) => ({
-            id: crypto.id,
-            name: crypto.name,
-            image: crypto.image,
-            price: crypto.current_price,
-            change: crypto.price_change_percentage_24h,
-            volume: crypto.circulating_supply,
-            market_cap: crypto.market_cap,
-        }));
-    }
-
-    if (stocksCurrencies.length === 0) {
-        return [];
-    }
-
-    return stocksCurrencies.map((stock) => ({
-        id: stock.stock,
-        name: stock.name,
-        image: stock.logo,
-        price: stock.close,
-        change: stock.change,
-        volume: stock.volume,
-        market_cap: stock.market_cap ?? 0,
-    }));
-}
+const stocksStore = useStocksCurrencyStore();
+const cryptoStore = useCryptoCurrencyStore();
 
 const isLoading = ref<boolean>(true);
 const isLoadingMore = ref<boolean>(false);
@@ -78,7 +38,6 @@ const cryptoStart = ref<number>(1);
 const stocksPage = ref<number>(1);
 const error = ref<boolean>(false);
 const dataType = ref<"cryptos" | "stocks">(localStorage.getItem("dataType") as "cryptos" | "stocks" | null ?? "stocks");
-const tableDatas = ref<HomeDatasTableData[]>([]);
 
 async function dataTypeLoader(type: "cryptos" | "stocks") {
 	if (type === "cryptos") {
@@ -87,7 +46,6 @@ async function dataTypeLoader(type: "cryptos" | "stocks") {
 		await listStocks(12, stocksPage.value);
 	}
 
-    tableDatas.value = formatData(type);
     localStorage.setItem("dataType", type);
 }
 
@@ -111,24 +69,26 @@ async function loadMoreDatas(type: "cryptos" | "stocks") {
 }
 
 onMounted(async () => {
-    if (tableDatas.value.length === 0) {
-        isLoading.value = true;
-        const localDataType: "cryptos" | "stocks" | null = localStorage.getItem("dataType") as "cryptos" | "stocks" | null;
-
+    isLoading.value = true;
+    const localDataType: "cryptos" | "stocks" | null = localStorage.getItem("dataType") as "cryptos" | "stocks" | null;
+    const useType = localDataType ?? dataType.value;
+    if (useType === "cryptos" && cryptoStore.cryptoCurrencies.length === 0 ||
+        useType === "stocks" && stocksStore.stocksCurrencies.length === 0
+    ) {
 		try {
-			await dataTypeLoader(localDataType ?? dataType.value);
+			await dataTypeLoader(useType);
 		} catch (err) {
 			console.error(err);
 			error.value = true;
 		}
 	}
-
     isLoading.value = false;
 });
 
 watch(dataType, async (newVal) => {
-    tableDatas.value = formatData(newVal);
-    if (tableDatas.value.length === 0) {
+    if (newVal === "cryptos" && cryptoStore.cryptoCurrencies.length === 0 ||
+        newVal === "stocks" && stocksStore.stocksCurrencies.length === 0
+    ) {
         isLoading.value = true;
         await dataTypeLoader(newVal);
         isLoading.value = false;
@@ -189,8 +149,8 @@ watch(dataType, async (newVal) => {
                 <TableHead class="w-40"><span v-translate>Capitalização de Mercado</span></TableHead>
             </TableRow>
         </TableHeader>
-        <TableBody>
-            <TableRow v-for="(data, index) in tableDatas" :key="index">
+        <TableBody v-if="dataType === 'cryptos'">
+            <TableRow v-for="(data, index) in cryptoStore.cryptoCurrencies" :key="index">
                 <TableCell>
                     <div class="flex gap-2 items-center w-40 md:w-52">
                         <Image class="rounded-full" :src="data.image" alt="Logo" width="27" height="27" />
@@ -199,12 +159,30 @@ watch(dataType, async (newVal) => {
                         </RouterLink>
                     </div>
                 </TableCell>
-                <TableCell>{{ dataType === "cryptos" ? "$" : "R$" }}{{ numberFormatter(data.price) }}</TableCell>
+                <TableCell>${{ numberFormatter(data.current_price) }}</TableCell>
+                <TableCell :class="{ 'text-positive': data.price_change_percentage_24h > 0, 'text-negative': data.price_change_percentage_24h < 0 }">
+                    {{ data.price_change_percentage_24h > 0 ? "+" : "" }}{{ numberFormatter(data.price_change_percentage_24h) }}%
+                </TableCell>
+                <TableCell>{{ numberFormatter(data.circulating_supply) }}</TableCell>
+                <TableCell>{{ numberFormatter(data.market_cap) }}</TableCell>
+            </TableRow>
+        </TableBody>
+        <TableBody v-if="dataType === 'stocks'">
+            <TableRow v-for="(data, index) in stocksStore.stocksCurrencies" :key="index">
+                <TableCell>
+                    <div class="flex gap-2 items-center w-40 md:w-52">
+                        <Image class="rounded-full" :src="data.logo" alt="Logo" width="27" height="27" />
+                        <RouterLink class="cursor-pointer hover:underline" :to="`/${dataType}/${data.stock}`">
+                            <h5 class="text-sm md:text-lg lg:text-xl font-semibold line-clamp-1">{{ data.name }}</h5>
+                        </RouterLink>
+                    </div>
+                </TableCell>
+                <TableCell>R${{ numberFormatter(data.close) }}</TableCell>
                 <TableCell :class="{ 'text-positive': data.change > 0, 'text-negative': data.change < 0 }">
                     {{ data.change > 0 ? "+" : "" }}{{ numberFormatter(data.change) }}%
                 </TableCell>
                 <TableCell>{{ numberFormatter(data.volume) }}</TableCell>
-                <TableCell>{{ numberFormatter(data.market_cap) }}</TableCell>
+                <TableCell>{{ numberFormatter(data.market_cap ?? 0) }}</TableCell>
             </TableRow>
         </TableBody>
     </Table>

@@ -16,7 +16,7 @@ const events = {
 	},
 	getSortedCryptoCurrencies: (payload: CoinGeckoEventEmitter) => {
 		const cryptoStore = useCryptoCurrencyStore();
-		cryptoStore.setHomeCryptoCurrencies(payload.cryptos as CryptoCurrency[]);
+		cryptoStore.setHomeTopsTableCryptoCurrencies(payload.cryptos as CryptoCurrency[]);
 	},
 	getDetailedCrypto: (payload: CoinGeckoEventEmitter) => {
 		const cryptoStore = useCryptoCurrencyStore();

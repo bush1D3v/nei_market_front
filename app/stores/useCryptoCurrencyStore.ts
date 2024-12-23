@@ -5,7 +5,7 @@ import type {CryptoCompleted} from "@/types/CoinGecko/CryptoDetail";
 
 export const useCryptoCurrencyStore = defineStore("cryptoCurrency", () => {
 	const cryptoCurrencies = ref<CryptoCurrency[]>([]);
-	const homeCryptoCurrencies = ref<CryptoCurrency[]>([]);
+	const homeTopsTableCryptoCurrencies = ref<CryptoCurrency[]>([]);
 	const cryptosDetails = ref<Record<string, CryptoCompleted>>({});
 
 	function addCryptoDetails(cryptoDetail: CryptoCompleted, slug: string): void {
@@ -20,12 +20,12 @@ export const useCryptoCurrencyStore = defineStore("cryptoCurrency", () => {
 		cryptosDetails.value[slug] = cryptoDetail;
 	}
 
-	function setHomeCryptoCurrencies(cryptoCurrencyArray: CryptoCurrency[]): void {
-		homeCryptoCurrencies.value = cryptoCurrencyArray;
+	function setHomeTopsTableCryptoCurrencies(cryptoCurrencyArray: CryptoCurrency[]): void {
+		homeTopsTableCryptoCurrencies.value = cryptoCurrencyArray;
 	}
 
-	function getHomeCryptoCurrency(id: string): CryptoCurrency | null {
-		return homeCryptoCurrencies.value.find((crypto) => crypto.id === id) || null;
+	function getHomeTopsTableCryptoCurrency(id: string): CryptoCurrency | null {
+		return homeTopsTableCryptoCurrencies.value.find((crypto) => crypto.id === id) || null;
 	}
 
 	function addCryptoCurrencies(cryptoCurrencyArray: CryptoCurrency[]): void {
@@ -38,14 +38,14 @@ export const useCryptoCurrencyStore = defineStore("cryptoCurrency", () => {
 
 	return {
 		cryptoCurrencies,
-		homeCryptoCurrencies,
+		homeTopsTableCryptoCurrencies,
 		cryptosDetails,
 		addCryptoDetails,
 		setCryptoDetail,
 		getCryptoDetail,
-		setHomeCryptoCurrencies,
+		setHomeTopsTableCryptoCurrencies,
 		addCryptoCurrencies,
 		getCryptoCurrency,
-		getHomeCryptoCurrency,
+		getHomeTopsTableCryptoCurrency,
 	};
 });

@@ -1,12 +1,11 @@
 import {ref} from "vue";
 import {defineStore} from "pinia";
-
 import type {Stock} from "@/types/BrapiDev/Stock";
 import type {DetailedStock} from "@/types/BrapiDev/DetailedStock";
 
 export const useStocksCurrencyStore = defineStore("stocksCurrency", () => {
 	const stocksCurrencies = ref<Stock[]>([]);
-	const homeStockCurrencies = ref<Stock[]>([]);
+	const homeTopsTableStockCurrencies = ref<Stock[]>([]);
 	const stocksDetails = ref<Record<string, DetailedStock>>({});
 
 	function setDetailedStock(stockDetail: DetailedStock): void {
@@ -17,8 +16,8 @@ export const useStocksCurrencyStore = defineStore("stocksCurrency", () => {
 		return stocksDetails.value[symbol] || null;
 	}
 
-	function setHomeStockCurrencies(stockCurrencyArray: Stock[]): void {
-		homeStockCurrencies.value = stockCurrencyArray;
+	function setHomeTopsTableStockCurrencies(stockCurrencyArray: Stock[]): void {
+		homeTopsTableStockCurrencies.value = stockCurrencyArray;
 	}
 
 	function addStocksCurrencies(stockCurrencyArray: Stock[]): void {
@@ -37,11 +36,11 @@ export const useStocksCurrencyStore = defineStore("stocksCurrency", () => {
 
 	return {
 		stocksCurrencies,
-		homeStockCurrencies,
+		homeTopsTableStockCurrencies,
 		stocksDetails,
 		setDetailedStock,
 		getDetailedStock,
-		setHomeStockCurrencies,
+		setHomeTopsTableStockCurrencies,
 		addStocksCurrencies,
 		detailStocksCurrency,
 	};

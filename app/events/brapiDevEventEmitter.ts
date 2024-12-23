@@ -15,7 +15,7 @@ const events = {
 	},
 	getHomeCurrencyStocks: (payload: BrapiDevEventEmitter) => {
 		const stockStore = useStocksCurrencyStore();
-		stockStore.setHomeStockCurrencies(payload.stocks as Stock[]);
+		stockStore.setHomeTopsTableStockCurrencies(payload.stocks as Stock[]);
 	},
 	getDetailedStock: (payload: BrapiDevEventEmitter) => {
 		const stockStore = useStocksCurrencyStore();

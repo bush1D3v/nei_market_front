@@ -39,7 +39,7 @@ onBeforeMount(async () => {
 	}
 	onStocksLoading.value = false;
 
-    if (!cryptoCurrencyStore.homeTopsTableCryptoCurrencies.length) {
+	if (!cryptoCurrencyStore.homeTopsTableCryptoCurrencies.length) {
 		await listCryptoCurrencies(5, 1, "market_cap_desc", "24h");
 	}
 	onCryptoLoading.value = false;

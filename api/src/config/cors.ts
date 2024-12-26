@@ -14,7 +14,6 @@ export const corsOptions: CorsOptions = {
 		"Accept-Encoding",
 		"Accept",
 		"referrer-policy",
-		"x-csrf-token",
 	],
 	credentials: true,
 	optionsSuccessStatus: 200,

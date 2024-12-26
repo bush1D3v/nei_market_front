@@ -1,15 +1,8 @@
 <script setup lang="ts">
 import numberFormatter from "@/utils/numberFormatter";
-import type { CryptoCurrency } from "@/types/CoinGecko/CryptoCurrency";
-import type { Stock } from "@/types/BrapiDev/Stock";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
+import type {CryptoCurrency} from "@/types/CoinGecko/CryptoCurrency";
+import type {Stock} from "@/types/BrapiDev/Stock";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -27,7 +20,7 @@ import {listCryptoCurrencies} from "@/services/CoinGecko";
 import {useCryptoCurrencyStore} from "@/stores/useCryptoCurrencyStore";
 import {useStocksCurrencyStore} from "@/stores/useStocksCurrencyStore";
 import {ref, onMounted, watch} from "vue";
-import { CheckIcon } from "@radix-icons/vue";
+import {CheckIcon} from "@radix-icons/vue";
 
 const stocksStore = useStocksCurrencyStore();
 const cryptoStore = useCryptoCurrencyStore();
@@ -37,7 +30,9 @@ const isLoadingMore = ref<boolean>(false);
 const cryptoStart = ref<number>(1);
 const stocksPage = ref<number>(1);
 const error = ref<boolean>(false);
-const dataType = ref<"cryptos" | "stocks">(localStorage.getItem("dataType") as "cryptos" | "stocks" | null ?? "stocks");
+const dataType = ref<"cryptos" | "stocks">(
+	(localStorage.getItem("dataType") as "cryptos" | "stocks" | null) ?? "stocks",
+);
 
 async function dataTypeLoader(type: "cryptos" | "stocks") {
 	if (type === "cryptos") {
@@ -46,17 +41,17 @@ async function dataTypeLoader(type: "cryptos" | "stocks") {
 		await listStocks(12, stocksPage.value);
 	}
 
-    localStorage.setItem("dataType", type);
+	localStorage.setItem("dataType", type);
 }
 
 async function loadMoreDatas(type: "cryptos" | "stocks") {
-    isLoadingMore.value = true;
+	isLoadingMore.value = true;
 
-    if (type === "cryptos") {
-        cryptoStart.value += 12;
-    } else {
-        stocksPage.value ++;
-    }
+	if (type === "cryptos") {
+		cryptoStart.value += 12;
+	} else {
+		stocksPage.value++;
+	}
 
 	try {
 		await dataTypeLoader(type);
@@ -69,12 +64,16 @@ async function loadMoreDatas(type: "cryptos" | "stocks") {
 }
 
 onMounted(async () => {
-    isLoading.value = true;
-    const localDataType: "cryptos" | "stocks" | null = localStorage.getItem("dataType") as "cryptos" | "stocks" | null;
-    const useType = localDataType ?? dataType.value;
-    if (useType === "cryptos" && cryptoStore.cryptoCurrencies.length === 0 ||
-        useType === "stocks" && stocksStore.stocksCurrencies.length === 0
-    ) {
+	isLoading.value = true;
+	const localDataType: "cryptos" | "stocks" | null = localStorage.getItem("dataType") as
+		| "cryptos"
+		| "stocks"
+		| null;
+	const useType = localDataType ?? dataType.value;
+	if (
+		(useType === "cryptos" && cryptoStore.cryptoCurrencies.length === 0) ||
+		(useType === "stocks" && stocksStore.stocksCurrencies.length === 0)
+	) {
 		try {
 			await dataTypeLoader(useType);
 		} catch (err) {
@@ -82,19 +81,20 @@ onMounted(async () => {
 			error.value = true;
 		}
 	}
-    isLoading.value = false;
+	isLoading.value = false;
 });
 
 watch(dataType, async (newVal) => {
-    if (newVal === "cryptos" && cryptoStore.cryptoCurrencies.length === 0 ||
-        newVal === "stocks" && stocksStore.stocksCurrencies.length === 0
-    ) {
-        isLoading.value = true;
-        await dataTypeLoader(newVal);
-        isLoading.value = false;
-    }
+	if (
+		(newVal === "cryptos" && cryptoStore.cryptoCurrencies.length === 0) ||
+		(newVal === "stocks" && stocksStore.stocksCurrencies.length === 0)
+	) {
+		isLoading.value = true;
+		await dataTypeLoader(newVal);
+		isLoading.value = false;
+	}
 
-    localStorage.setItem("dataType", newVal);
+	localStorage.setItem("dataType", newVal);
 });
 </script>
 
@@ -116,7 +116,8 @@ watch(dataType, async (newVal) => {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                        <DropdownMenuItem @click="dataType = 'cryptos'" class="cursor-pointer flex justify-between items-center">
+                        <DropdownMenuItem @click="dataType = 'cryptos'"
+                            class="cursor-pointer flex justify-between items-center">
                             <div>
                                 <span v-html="'&#129689;'"></span>&nbsp;&nbsp;
                                 <span v-translate>
@@ -125,7 +126,8 @@ watch(dataType, async (newVal) => {
                             </div>
                             <CheckIcon v-if="dataType === 'cryptos'" />
                         </DropdownMenuItem>
-                        <DropdownMenuItem @click="dataType = 'stocks'" class="cursor-pointer flex justify-between items-center">
+                        <DropdownMenuItem @click="dataType = 'stocks'"
+                            class="cursor-pointer flex justify-between items-center">
                             <div>
                                 <span v-html="'&#128188;'"></span>&nbsp;&nbsp;
                                 <span v-translate>
@@ -160,8 +162,10 @@ watch(dataType, async (newVal) => {
                     </div>
                 </TableCell>
                 <TableCell>${{ numberFormatter(data.current_price) }}</TableCell>
-                <TableCell :class="{ 'text-positive': data.price_change_percentage_24h > 0, 'text-negative': data.price_change_percentage_24h < 0 }">
-                    {{ data.price_change_percentage_24h > 0 ? "+" : "" }}{{ numberFormatter(data.price_change_percentage_24h) }}%
+                <TableCell
+                    :class="{ 'text-positive': data.price_change_percentage_24h > 0, 'text-negative': data.price_change_percentage_24h < 0 }">
+                    {{ data.price_change_percentage_24h > 0 ? "+" : "" }}{{
+                        numberFormatter(data.price_change_percentage_24h) }}%
                 </TableCell>
                 <TableCell>{{ numberFormatter(data.circulating_supply) }}</TableCell>
                 <TableCell>{{ numberFormatter(data.market_cap) }}</TableCell>

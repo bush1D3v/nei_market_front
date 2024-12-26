@@ -22,7 +22,7 @@ import type {ChartData} from "@/components/Chart/types/ChartData";
 import Image from "@/tags/Image.vue";
 import LinksList from "./components/LinksList.vue";
 import ValuesList from "./components/ValuesList.vue";
-import { t } from "i18next";
+import {t} from "i18next";
 
 const route = useRoute();
 const crypto = String(route.params.crypto);

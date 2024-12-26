@@ -2,7 +2,8 @@
 	"material-icon-theme.folders.associations": {
 		"tags": "mjml",
 		"dto": "interface",
-		"proxy": "stack"
+		"proxy": "stack",
+		"notification": "client"
 	},
 	"cSpell.words": [
 		"aboutus",

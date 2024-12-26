@@ -6,12 +6,6 @@ import Sonner from "@/components/ui/sonner/Sonner.vue";
 import Toaster from "@/components/ui/toast/Toaster.vue";
 import Breadcrumb from "@/components/Breadcrumb.vue";
 import GenerativeAI from "@/components/GenerativeAI.vue";
-import {onBeforeMount} from "vue";
-import {getCsrfToken} from "./services/Tokens";
-
-onBeforeMount(async () => {
-	await getCsrfToken();
-});
 </script>
 
 <template>

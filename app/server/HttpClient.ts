@@ -1,9 +1,6 @@
-import getCookie from "@/utils/getCookie";
-
 interface DefaultHeaders {
 	"Content-Type": string;
 	Accept: string;
-	"x-csrf-token"?: string;
 }
 
 const DEFAULT_HEADERS: DefaultHeaders = {
@@ -23,13 +20,7 @@ interface HttpRequestOptions {
 	body?: any;
 }
 
-function setCookies() {
-	const csrf_token = getCookie("x-csrf-token") as string;
-	DEFAULT_HEADERS["x-csrf-token"] = csrf_token;
-}
-
 async function httpRequest(url: string, options: HttpRequestOptions): Promise<Response> {
-	setCookies();
 	const headers = {...DEFAULT_HEADERS, ...options.headers};
 
 	return await fetch(`${SERVER_HOST}:${SERVER_PORT}${url}`, {

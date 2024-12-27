@@ -22,7 +22,6 @@ O **NEI Market Analytics** é um projeto de código aberto projetado para fornec
    <img align='center' height='50' width='68' title='Tailwindcss' alt='tailwindcss' src='https://github.com/devicons/devicon/blob/master/icons/tailwindcss/tailwindcss-original.svg' />
    <img align='center' height='50' width='70' title='TypeScript' alt='typescript' src='https://github.com/devicons/devicon/blob/master/icons/typescript/typescript-original.svg' />
    <img align='center' height='50' width='50' title='Potcss' alt='postcss' src='https://github.com/user-attachments/assets/d3d1fb66-b4f1-4fdf-8b87-07d2b382a1a2' />&nbsp;&nbsp;
-   <img align='center' height='49' width='49' title='Dotenv' alt='dotenv' src='https://github.com/bush1D3v/navarro_blog_api/assets/133554156/de030e87-8f12-4b6b-8c75-071bab8526a5' /> &nbsp;&nbsp;
    <img align='center' height='48' width='48' title='GitHub Actions' alt='github actions' src='https://github.com/bush1D3v/navarro_blog_api/assets/133554156/0ce89dba-2909-4673-8b71-94a135f61bfb' /> &nbsp;&nbsp;
    <img align='center' height='70' width='70' title='Docker' alt='docker' src='https://github.com/devicons/devicon/blob/master/icons/docker/docker-plain.svg' /> &nbsp;
    <img align='center' height='60' width='50' title='Vitest' alt='vitest' src='https://github.com/bush1D3v/tsbank_api/assets/133554156/74803ee6-3f6e-4335-9f56-cb887a4285ff' />  &nbsp;&nbsp;
@@ -32,13 +31,8 @@ O **NEI Market Analytics** é um projeto de código aberto projetado para fornec
    <img align='center' height='50' width='60' title='Biomejs' alt='biomejs' src='https://github.com/user-attachments/assets/b3d8a249-e17f-4e64-9608-4a4783b7bbc0' /> &nbsp;
    <img align='center' height='50' width='50' title='Chromatic' alt='chromatic' src='https://github.com/user-attachments/assets/6edd5832-5db7-4e2a-a8e4-4bbe7b8e7208' /> &nbsp;
    <img align='center' height='50' width='50' title='i18next' alt='i18next' src='https://github.com/user-attachments/assets/166d58bf-9e8e-46d7-94ce-cb1910bc6932' /> &nbsp;
-   <img align='center' height='49' width='49' title='Express' alt='express' src='https://github.com/bush1D3v/solid_rest_api/assets/133554156/ba645c20-1f19-4914-8ad0-de6c7f83ba2e' /> &nbsp;&nbsp;
-   <img align='center' height='53' width='49' title='Nodemon' alt='nodemon' src='https://github.com/bush1D3v/solid_rest_api/assets/133554156/fd586348-7781-4e02-a4f0-fe7410ef43fb' /> &nbsp;&nbsp;
-   <img align='center' height='50' width='50' title='Cors' alt='cors' src='https://github.com/bush1D3v/101acessorios_api/assets/133554156/3b4cccec-065e-428a-a663-1c5939404c1a' /> &nbsp;&nbsp;
    <img align='center' height='50' width='50' title='Socket.io' alt='socket.io' src='https://github.com/user-attachments/assets/0d4bbd4e-64dc-4981-aabd-c89ceae0201e' /> &nbsp;
    <img align='center' height='55' width='55' title='Generative-ai' alt='generative-ai' src='https://github.com/user-attachments/assets/ec5efb9a-2cd7-48cc-bb1c-2c4ffe92af4d' /> &nbsp;
-   <img align='center' height='50' width='50' title='Cookie-parser' alt='cookie-parser' src='https://github.com/user-attachments/assets/9e0bcdc8-d74a-42a1-add5-876ac1896fe4' /> &nbsp;&nbsp;
-   <img align='center' height='50' width='50' title='Rate-limiter' alt='rate-limiter' src='https://github.com/user-attachments/assets/f5ff3529-3dd4-426e-89a1-7f871693a3dd' /> &nbsp;&nbsp;
 </div>
 
 ## 🏗 Estrutura e Arquitetura
@@ -65,11 +59,6 @@ O TypeScript não pode manipular informações de tipo para importações `.vue`
 
 ```sh
 bun install
-```
-### Compilar e recarregar rapidamente para Back-end
-
-```sh
-bun up
 ```
 
 ### Compilar e recarregar rapidamente para Front-end
@@ -124,7 +113,6 @@ The **NEI Market Analytics** is an open-source project designed to provide compr
    <img align='center' height='50' width='68' title='Tailwindcss' alt='tailwindcss' src='https://github.com/devicons/devicon/blob/master/icons/tailwindcss/tailwindcss-original.svg' />
    <img align='center' height='50' width='70' title='TypeScript' alt='typescript' src='https://github.com/devicons/devicon/blob/master/icons/typescript/typescript-original.svg' />
    <img align='center' height='50' width='50' title='Potcss' alt='postcss' src='https://github.com/user-attachments/assets/d3d1fb66-b4f1-4fdf-8b87-07d2b382a1a2' />&nbsp;&nbsp;
-   <img align='center' height='49' width='49' title='Dotenv' alt='dotenv' src='https://github.com/bush1D3v/navarro_blog_api/assets/133554156/de030e87-8f12-4b6b-8c75-071bab8526a5' /> &nbsp;&nbsp;
    <img align='center' height='48' width='48' title='GitHub Actions' alt='github actions' src='https://github.com/bush1D3v/navarro_blog_api/assets/133554156/0ce89dba-2909-4673-8b71-94a135f61bfb' /> &nbsp;&nbsp;
    <img align='center' height='70' width='70' title='Docker' alt='docker' src='https://github.com/devicons/devicon/blob/master/icons/docker/docker-plain.svg' /> &nbsp;
    <img align='center' height='60' width='50' title='Vitest' alt='vitest' src='https://github.com/bush1D3v/tsbank_api/assets/133554156/74803ee6-3f6e-4335-9f56-cb887a4285ff' />  &nbsp;&nbsp;
@@ -134,13 +122,8 @@ The **NEI Market Analytics** is an open-source project designed to provide compr
    <img align='center' height='50' width='60' title='Biomejs' alt='biomejs' src='https://github.com/user-attachments/assets/b3d8a249-e17f-4e64-9608-4a4783b7bbc0' /> &nbsp;
    <img align='center' height='50' width='50' title='Chromatic' alt='chromatic' src='https://github.com/user-attachments/assets/6edd5832-5db7-4e2a-a8e4-4bbe7b8e7208' /> &nbsp;
    <img align='center' height='50' width='50' title='i18next' alt='i18next' src='https://github.com/user-attachments/assets/166d58bf-9e8e-46d7-94ce-cb1910bc6932' /> &nbsp;
-   <img align='center' height='49' width='49' title='Express' alt='express' src='https://github.com/bush1D3v/solid_rest_api/assets/133554156/ba645c20-1f19-4914-8ad0-de6c7f83ba2e' /> &nbsp;&nbsp;
-   <img align='center' height='53' width='49' title='Nodemon' alt='nodemon' src='https://github.com/bush1D3v/solid_rest_api/assets/133554156/fd586348-7781-4e02-a4f0-fe7410ef43fb' /> &nbsp;&nbsp;
-   <img align='center' height='50' width='50' title='Cors' alt='cors' src='https://github.com/bush1D3v/101acessorios_api/assets/133554156/3b4cccec-065e-428a-a663-1c5939404c1a' /> &nbsp;&nbsp;
    <img align='center' height='50' width='50' title='Socket.io' alt='socket.io' src='https://github.com/user-attachments/assets/0d4bbd4e-64dc-4981-aabd-c89ceae0201e' /> &nbsp;
    <img align='center' height='55' width='55' title='Generative-ai' alt='generative-ai' src='https://github.com/user-attachments/assets/ec5efb9a-2cd7-48cc-bb1c-2c4ffe92af4d' /> &nbsp;
-   <img align='center' height='50' width='50' title='Cookie-parser' alt='cookie-parser' src='https://github.com/user-attachments/assets/9e0bcdc8-d74a-42a1-add5-876ac1896fe4' /> &nbsp;&nbsp;
-   <img align='center' height='50' width='50' title='Rate-limiter' alt='rate-limiter' src='https://github.com/user-attachments/assets/f5ff3529-3dd4-426e-89a1-7f871693a3dd' /> &nbsp;&nbsp;
 </div>
 
 ## 🏗 Structure and Architecture
@@ -167,12 +150,6 @@ TypeScript cannot handle type information for `.vue` imports by default, so we r
 
 ```sh
 bun install
-```
-
-### Compile and Hot-Reload for Back-end
-
-```sh
-bun up
 ```
 
 ### Compile and Hot-Reload for Front-end

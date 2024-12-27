@@ -1,12 +1,12 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
-import {within, expect} from "@storybook/test";
-import Badges from "@/components/Badges.vue";
-import {BadgesDto} from "@/components/Dto/BadgesDto";
+import type { Meta, StoryObj } from "@storybook/vue3";
+import { within, expect } from "@storybook/test";
+import Badges from "src/components/Badges.vue";
+import { BadgesDto } from "src/components/Dto/BadgesDto";
 
 const meta: Meta<typeof Badges> = {
 	title: "Components/Badges",
 	component: Badges,
-	tags: ["autodocs"],
+	tags: [ "autodocs" ],
 	parameters: {
 		actions: {
 			argTypesRegex: "^on.*",
@@ -16,7 +16,7 @@ const meta: Meta<typeof Badges> = {
 		badges: {
 			description: "The badges of the Badges",
 			example: BadgesDto,
-			control: {type: "object"},
+			control: { type: "object" },
 		},
 	},
 };
@@ -30,7 +30,7 @@ export const Default: Story = {
 	args: {
 		badges: BadgesDto,
 	},
-	play: async ({canvasElement, step}) => {
+	play: async ({ canvasElement, step }) => {
 		const canvas = within(canvasElement);
 
 		const BadgesElement = canvas.getByTestId("Badges");

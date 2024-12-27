@@ -1,12 +1,12 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
-import {within, expect} from "@storybook/test";
-import Link from "@/tags/Link.vue";
-import {LinkMock} from "../../mocks/components/tags/Link";
+import type { Meta, StoryObj } from "@storybook/vue3";
+import { within, expect } from "@storybook/test";
+import Link from "src/tags/Link.vue";
+import { LinkMock } from "../../mocks/components/tags/Link";
 
 const meta: Meta<typeof Link> = {
 	title: "Components/Tags/Link",
 	component: Link,
-	tags: ["autodocs"],
+	tags: [ "autodocs" ],
 	parameters: {
 		actions: {
 			argTypesRegex: "^on.*",
@@ -16,18 +16,18 @@ const meta: Meta<typeof Link> = {
 		href: {
 			description: "The href of the link",
 			example: "https://www.google.com",
-			control: {type: "text"},
+			control: { type: "text" },
 		},
 		target: {
 			description: "The target of the link",
 			example: "_blank",
-			control: {type: "select"},
-			options: ["_blank", "_self", "_parent", "_top"],
+			control: { type: "select" },
+			options: [ "_blank", "_self", "_parent", "_top" ],
 		},
 		class: {
 			description: "The class of the link",
 			example: "text-blue",
-			control: {type: "text"},
+			control: { type: "text" },
 		},
 	},
 };
@@ -38,8 +38,8 @@ type Story = StoryObj<typeof Link>;
 
 export const Default: Story = {
 	name: "Default",
-	args: {...LinkMock, default: "Click here"},
-	play: async ({canvasElement, step}) => {
+	args: { ...LinkMock, default: "Click here" },
+	play: async ({ canvasElement, step }) => {
 		const canvas = within(canvasElement);
 
 		const LinkElement = canvas.getByTestId("Link");

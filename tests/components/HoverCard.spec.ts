@@ -1,10 +1,10 @@
-import {test, expect, describe} from "vitest";
-import HoverCard from "@/components/HoverCard.vue";
-import {mount} from "@vue/test-utils";
-import {HoverCardMock} from "../../mocks/components/HoverCard";
+import { test, expect, describe } from "vitest";
+import HoverCard from "src/components/HoverCard.vue";
+import { mount } from "@vue/test-utils";
+import { HoverCardMock } from "../../mocks/components/HoverCard";
 
 describe("HoverCard Component Tests", () => {
-	const wrapper = mount(HoverCard, {props: {...HoverCardMock}});
+	const wrapper = mount(HoverCard, { props: { ...HoverCardMock } });
 	const hoverCardComponent = wrapper.findComponent(HoverCard);
 
 	test("Should be able to render the component correctly", async () => {

@@ -1,4 +1,4 @@
-import type {HoverCardProps} from "@/components/HoverCard.vue";
+import type { HoverCardProps } from "src/components/HoverCard.vue";
 
 export const HoverCardMock: HoverCardProps = {
 	title: "John Doe",

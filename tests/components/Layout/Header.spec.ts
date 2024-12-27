@@ -1,6 +1,6 @@
-import {test, expect, describe} from "vitest";
-import Header from "@/components/Layout/Header.vue";
-import {shallowMount} from "@vue/test-utils";
+import { test, expect, describe } from "vitest";
+import Header from "src/components/Layout/Header.vue";
+import { shallowMount } from "@vue/test-utils";
 
 describe("Header Component Tests", () => {
 	const wrapper = shallowMount(Header);

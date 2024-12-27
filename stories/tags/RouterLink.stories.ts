@@ -1,12 +1,12 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
-import {within, expect} from "@storybook/test";
-import RouterLink from "@/tags/RouterLink.vue";
-import {RouterLinkMock} from "../../mocks/components/tags/RouterLink";
+import type { Meta, StoryObj } from "@storybook/vue3";
+import { within, expect } from "@storybook/test";
+import RouterLink from "src/tags/RouterLink.vue";
+import { RouterLinkMock } from "../../mocks/components/tags/RouterLink";
 
 const meta: Meta<typeof RouterLink> = {
 	title: "Components/Tags/RouterLink",
 	component: RouterLink,
-	tags: ["autodocs"],
+	tags: [ "autodocs" ],
 	parameters: {
 		actions: {
 			argTypesRegex: "^on.*",
@@ -16,12 +16,12 @@ const meta: Meta<typeof RouterLink> = {
 		to: {
 			description: "The router ref of the RouterLink",
 			example: "/about-us",
-			control: {type: "text"},
+			control: { type: "text" },
 		},
 		class: {
 			description: "The class of the RouterLink",
 			example: "text-blue",
-			control: {type: "text"},
+			control: { type: "text" },
 		},
 	},
 };
@@ -32,8 +32,8 @@ type Story = StoryObj<typeof RouterLink>;
 
 export const Default: Story = {
 	name: "Default",
-	args: {...RouterLinkMock},
-	play: async ({canvasElement, step}) => {
+	args: { ...RouterLinkMock },
+	play: async ({ canvasElement, step }) => {
 		const canvas = within(canvasElement);
 
 		const RouterLinkElement = canvas.getByTestId("RouterLink");

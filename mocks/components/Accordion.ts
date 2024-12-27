@@ -1,4 +1,4 @@
-import type {Item} from "@/components/Accordion.vue";
+import type { Item } from "src/components/Accordion.vue";
 
 export const AccordionMock: Item[] = [
 	{

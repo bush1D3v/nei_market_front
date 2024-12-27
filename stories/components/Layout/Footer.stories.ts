@@ -1,11 +1,11 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
-import {within, expect} from "@storybook/test";
-import Footer from "@/components/Layout/Footer.vue";
+import type { Meta, StoryObj } from "@storybook/vue3";
+import { within, expect } from "@storybook/test";
+import Footer from "src/components/Layout/Footer.vue";
 
 const meta: Meta<typeof Footer> = {
 	title: "Components/Layout/Footer",
 	component: Footer,
-	tags: ["autodocs"],
+	tags: [ "autodocs" ],
 	parameters: {
 		actions: {
 			argTypesRegex: "^on.*",
@@ -19,7 +19,7 @@ type Story = StoryObj<typeof Footer>;
 
 export const Default: Story = {
 	name: "Default",
-	play: async ({canvasElement, step}) => {
+	play: async ({ canvasElement, step }) => {
 		const canvas = within(canvasElement);
 
 		const FooterElement = canvas.getByTestId("Footer");

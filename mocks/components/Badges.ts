@@ -1,4 +1,4 @@
-import type {BadgeProps} from "@/components/Badges.vue";
+import type { BadgeProps } from "src/components/Badges.vue";
 
 export const BadgesMock: BadgeProps[] = [
 	{

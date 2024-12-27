@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
-import { within, expect } from "@storybook/test";
+import type {Meta, StoryObj} from "@storybook/vue3";
+import {within, expect} from "@storybook/test";
 import Accordion from "src/components/Accordion.vue";
-import { AccordionMock } from "../../mocks/components/Accordion";
+import {AccordionMock} from "../../mocks/components/Accordion";
 
 const meta: Meta<typeof Accordion> = {
 	title: "Components/Accordion",
 	component: Accordion,
-	tags: [ "autodocs" ],
+	tags: ["autodocs"],
 	parameters: {
 		actions: {
 			argTypesRegex: "^on.*",
@@ -16,7 +16,7 @@ const meta: Meta<typeof Accordion> = {
 		items: {
 			description: "The items of the Accordion",
 			example: AccordionMock,
-			control: { type: "object" },
+			control: {type: "object"},
 		},
 	},
 };
@@ -30,7 +30,7 @@ export const Default: Story = {
 	args: {
 		items: AccordionMock,
 	},
-	play: async ({ canvasElement, step }) => {
+	play: async ({canvasElement, step}) => {
 		const canvas = within(canvasElement);
 
 		const AccordionElement = canvas.getByTestId("Accordion");

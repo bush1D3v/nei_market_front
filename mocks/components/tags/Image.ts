@@ -1,4 +1,4 @@
-import type { ImageProps } from "src/tags/Image.vue";
+import type {ImageProps} from "src/tags/Image.vue";
 
 export const ImageMock: ImageProps = {
 	alt: "image",

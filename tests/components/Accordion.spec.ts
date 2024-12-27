@@ -1,10 +1,10 @@
-import { test, expect, describe } from "vitest";
+import {test, expect, describe} from "vitest";
 import Accordion from "src/components/Accordion.vue";
-import { mount } from "@vue/test-utils";
-import { AccordionMock } from "../../mocks/components/Accordion";
+import {mount} from "@vue/test-utils";
+import {AccordionMock} from "../../mocks/components/Accordion";
 
 describe("Accordion Component Tests", () => {
-	const wrapper = mount(Accordion, { props: { items: AccordionMock } });
+	const wrapper = mount(Accordion, {props: {items: AccordionMock}});
 	const accordionComponent = wrapper.findComponent(Accordion);
 
 	test("Should be able to render the component correctly", async () => {
@@ -22,7 +22,7 @@ describe("Accordion Component Tests", () => {
 	});
 
 	test("Should be able to render the component with the correct classes", async () => {
-		expect(accordionComponent.classes()).toStrictEqual([ "w-full" ]);
+		expect(accordionComponent.classes()).toStrictEqual(["w-full"]);
 	});
 
 	test("Should have the correct collapsible prop", async () => {

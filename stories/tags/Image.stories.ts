@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
-import { within, expect } from "@storybook/test";
+import type {Meta, StoryObj} from "@storybook/vue3";
+import {within, expect} from "@storybook/test";
 import Image from "src/tags/Image.vue";
-import { ImageMock } from "../../mocks/components/tags/Image";
+import {ImageMock} from "../../mocks/components/tags/Image";
 
 const meta: Meta<typeof Image> = {
 	title: "Components/Tags/Image",
 	component: Image,
-	tags: [ "autodocs" ],
+	tags: ["autodocs"],
 	parameters: {
 		actions: {
 			argTypesRegex: "^on.*",
@@ -16,27 +16,27 @@ const meta: Meta<typeof Image> = {
 		alt: {
 			description: "The alt of the image",
 			example: "image",
-			control: { type: "text" },
+			control: {type: "text"},
 		},
 		height: {
 			description: "The height of the image",
 			example: "80",
-			control: { type: "text" },
+			control: {type: "text"},
 		},
 		width: {
 			description: "The width of the image",
 			example: "80",
-			control: { type: "text" },
+			control: {type: "text"},
 		},
 		src: {
 			description: "The source of the image",
 			example: "https://via.placeholder.com/80",
-			control: { type: "text" },
+			control: {type: "text"},
 		},
 		class: {
 			description: "The class of the image",
 			example: "w-20 h-20",
-			control: { type: "text" },
+			control: {type: "text"},
 		},
 	},
 };
@@ -48,7 +48,7 @@ type Story = StoryObj<typeof Image>;
 export const Default: Story = {
 	name: "Default",
 	args: ImageMock,
-	play: async ({ canvasElement, step }) => {
+	play: async ({canvasElement, step}) => {
 		const canvas = within(canvasElement);
 
 		const ImageElement = canvas.getByTestId("Image");

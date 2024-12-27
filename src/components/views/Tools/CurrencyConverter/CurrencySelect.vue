@@ -40,7 +40,7 @@ function selectItem(currency: KeyValue) {
 }
 
 onMounted(async () => {
-	if (!currencyQuotesStore.currencyQuotes) {
+	if (!currencyQuotesStore.currencyQuotes?.rates) {
 		const data = await listCurrencyQuotes();
 		if (!data) {
 			const currencies = {

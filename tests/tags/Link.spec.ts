@@ -1,11 +1,11 @@
-import { test, expect, describe } from "vitest";
+import {test, expect, describe} from "vitest";
 import Link from "src/tags/Link.vue";
-import { LinkMock } from "../../mocks/components/tags/Link";
-import { shallowMount } from "@vue/test-utils";
+import {LinkMock} from "../../mocks/components/tags/Link";
+import {shallowMount} from "@vue/test-utils";
 
 describe("Link Component Tests", () => {
 	const wrapper = shallowMount(Link, {
-		props: { ...LinkMock },
+		props: {...LinkMock},
 		slots: {
 			default: "Texto do Link",
 		},

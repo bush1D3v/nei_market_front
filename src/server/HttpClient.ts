@@ -4,7 +4,7 @@ interface DefaultHeaders {
 }
 
 const DEFAULT_HEADERS: DefaultHeaders = {
-	"Content-Type": "application/json; charset=utf-8",
+	"Content-Type": "application/json;",
 	Accept: "application/json",
 };
 

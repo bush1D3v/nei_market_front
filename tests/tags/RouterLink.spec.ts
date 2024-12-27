@@ -1,11 +1,11 @@
-import { test, expect, describe } from "vitest";
+import {test, expect, describe} from "vitest";
 import RouterLink from "src/tags/RouterLink.vue";
-import { RouterLinkMock } from "../../mocks/components/tags/RouterLink";
-import { shallowMount } from "@vue/test-utils";
+import {RouterLinkMock} from "../../mocks/components/tags/RouterLink";
+import {shallowMount} from "@vue/test-utils";
 
 describe("Link Component Tests", () => {
 	const wrapper = shallowMount(RouterLink, {
-		props: { ...RouterLinkMock },
+		props: {...RouterLinkMock},
 	});
 	const routerLinkComponent = wrapper.findComponent(RouterLink);
 

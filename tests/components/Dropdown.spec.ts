@@ -1,11 +1,11 @@
-import { test, expect, describe } from "vitest";
+import {test, expect, describe} from "vitest";
 import Dropdown from "src/components/Dropdown.vue";
-import { mount } from "@vue/test-utils";
-import { DropdownMock } from "../../mocks/components/Dropdown";
+import {mount} from "@vue/test-utils";
+import {DropdownMock} from "../../mocks/components/Dropdown";
 
 describe("Dropdown Component Tests", () => {
 	const wrapper = mount(Dropdown, {
-		props: { buttonTile: "Tópicos", label: "Tópicos", menu: DropdownMock },
+		props: {buttonTile: "Tópicos", label: "Tópicos", menu: DropdownMock},
 	});
 	const DropdownComponent = wrapper.findComponent(Dropdown);
 

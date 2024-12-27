@@ -1,10 +1,10 @@
-import { test, expect, describe } from "vitest";
+import {test, expect, describe} from "vitest";
 import Image from "src/tags/Image.vue";
-import { ImageMock } from "../../mocks/components/tags/Image";
-import { shallowMount } from "@vue/test-utils";
+import {ImageMock} from "../../mocks/components/tags/Image";
+import {shallowMount} from "@vue/test-utils";
 
 describe("Image Component Tests", () => {
-	const wrapper = shallowMount(Image, { props: { ...ImageMock } });
+	const wrapper = shallowMount(Image, {props: {...ImageMock}});
 	const imageComponent = wrapper.findComponent(Image);
 
 	test("Should be able to render the component correctly", async () => {

@@ -1,4 +1,4 @@
-import type { LinkProps } from "src/tags/Link.vue";
+import type {LinkProps} from "src/tags/Link.vue";
 
 export const LinkMock: LinkProps = {
 	href: "https://www.google.com",

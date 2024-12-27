@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
-import { within, expect } from "@storybook/test";
+import type {Meta, StoryObj} from "@storybook/vue3";
+import {within, expect} from "@storybook/test";
 import Header from "src/components/Layout/Header.vue";
 
 const meta: Meta<typeof Header> = {
 	title: "Components/Layout/Header",
 	component: Header,
-	tags: [ "autodocs" ],
+	tags: ["autodocs"],
 	parameters: {
 		actions: {
 			argTypesRegex: "^on.*",
@@ -19,7 +19,7 @@ type Story = StoryObj<typeof Header>;
 
 export const Default: Story = {
 	name: "Default",
-	play: async ({ canvasElement, step }) => {
+	play: async ({canvasElement, step}) => {
 		const canvas = within(canvasElement);
 
 		const HeaderElement = canvas.getByTestId("Header");

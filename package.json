@@ -4,6 +4,8 @@
 	"private": true,
 	"type": "module",
 	"license": "MIT",
+	"main": "main.ts",
+	"author": "Victor José Lopes Navarro",
 	"scripts": {
 		"dev": "vite",
 		"up": "cd api && bun dev",
@@ -18,9 +20,8 @@
 		"build-only": "vite build",
 		"type-check": "vue-tsc --build --force",
 		"build-storybook": "storybook build",
-		"docker-build": "docker-compose build",
-		"docker-run": "docker build -t nei_market_analytics .",
-		"docker-up": "docker-compose up",
+		"docker-build": "docker build -t nei_market_front .",
+		"docker-run": "docker-compose up --build",
 		"docker-clean": "docker-compose down"
 	},
 	"dependencies": {

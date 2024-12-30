@@ -1,9 +1,8 @@
 {
 	"name": "Vue Development Environment",
 	"dockerComposeFile": "../docker-compose.yml",
-	"service": "vue",
-	"workspaceFolder": "/workspace",
-
+	"service": "app",
+	"workspaceFolder": "/app",
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -23,15 +22,10 @@
 			}
 		}
 	},
-
 	"features": {
 		"ghcr.io/devcontainers/features/node:1": {},
 		"ghcr.io/devcontainers/features/git:1": {}
 	},
-
-	"forwardPorts": [5173, 6006, 9323, 3000],
-
-	"postCreateCommand": "npm install",
-
-	"remoteUser": "node"
+	"forwardPorts": [5173],
+	"postCreateCommand": "bun install --production"
 }

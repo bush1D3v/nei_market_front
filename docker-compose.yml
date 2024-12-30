@@ -1,65 +1,11 @@
-version: '3.8'
+version: '3.2'
 
 services:
-    vue:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        volumes:
-            - .:/workspace
-            - node_modules:/workspace/node_modules
-        working_dir: /workspace
-        command: npm run dev
-        ports:
-            - "5173:5173"
+    app:
+        image: "oven/bun"
+        entrypoint: []
+        command: "/bin/sh -c 'bun install && bun dev --host 0.0.0.0'"
+        ports: ["5173:5173"]
+        volumes: ["./:/home/bun/app"]
         environment:
             - HOST=0.0.0.0
-
-    express:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        volumes:
-            - .:/workspace
-            - node_modules_api:/workspace/node_modules
-        working_dir: /workspace
-        command: npm run dev
-        ports:
-            - "3000:3000"
-        depends_on:
-            - vue
-
-    storybook:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        volumes:
-            - .:/workspace
-            - node_modules:/workspace/node_modules
-        working_dir: /workspace
-        environment:
-            - GIT_USER_EMAIL=${GIT_USER_EMAIL}
-            - GIT_USER_NAME=${GIT_USER_NAME}
-        command: npm run storybook
-        ports:
-            - "6006:6006"
-        depends_on:
-            - vue
-
-    playwright:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        volumes:
-            - .:/workspace
-            - node_modules:/workspace/node_modules
-        working_dir: /workspace
-        command: sh -c "xvfb-run -- npx playwright test --ui"
-        ports:
-            - "9323:9323"
-        depends_on:
-            - vue
-
-volumes:
-    node_modules:
-    node_modules_api:

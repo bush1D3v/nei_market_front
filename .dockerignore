@@ -1,7 +1,9 @@
+.devcontainer
 .github
 .vscode
 .git
 .gitignore
+.env.example
 biome.json
 COMMIT_PATTERN.md
 CONTRIBUTING.md

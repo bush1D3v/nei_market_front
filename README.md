@@ -45,7 +45,7 @@ Com a adição do Docker, você agora pode utilizar dos scripts fornecidos em `p
 
 Para isso, segue a lista de funções de cada script:
 
-> `docker-build`: Constrói as imagens docker do projeto <br> `docker-run`: Roda os containers de navarro_blog_front <br> `docker-up`: Sobe os contêineres navarro_blog_front <br> `docker-clean`: Remove as imagens docker do projeto
+> `docker-build`: Constrói as imagens docker do projeto <br> `docker-run`: Roda e sobe o container navarro_blog_front
 
 ## Configuração IDE recomendada
 
@@ -136,7 +136,7 @@ With the addition of Docker, you can now use the scripts provided in `package.js
 
 To do this, here is the list of functions for each script:
 
-> `docker-build`: Builds the project's docker images <br> `docker-run`: Runs the navarro_blog_front containers <br> `docker-up`: Builds and up the navarro_blog_front containers <br> `docker-clean `: Remove docker images
+> `docker-build`: Builds the project's docker images <br> `docker-run`: Builds and Runs the navarro_blog_api container
 
 ## Recommended IDE Setup
 

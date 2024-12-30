@@ -11,6 +11,12 @@
 		"EditorConfig.EditorConfig",
 		"ms-playwright.playwright",
 		"vitest.explorer",
-		"ms-vscode-remote.remote-containers"
+		"ms-vscode-remote.remote-containers",
+		"formulahendry.auto-close-tag",
+		"formulahendry.auto-rename-tag",
+		"usernamehw.errorlens",
+		"xabikos.JavaScriptSnippets",
+		"christian-kohler.path-intellisense",
+		"bradlc.vscode-tailwindcss"
 	]
 }

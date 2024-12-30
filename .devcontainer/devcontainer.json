@@ -7,11 +7,23 @@
 		"vscode": {
 			"extensions": [
 				"Vue.volar",
-				"dbaeumer.vscode-eslint",
-				"esbenp.prettier-vscode",
-				"bradlc.vscode-tailwindcss",
+				"biomejs.biome",
+				"streetsidesoftware.code-spell-checker",
+				"streetsidesoftware.code-spell-checker-spanish",
+				"streetsidesoftware.code-spell-checker-portuguese",
+				"streetsidesoftware.code-spell-checker-portuguese-brazilian",
+				"ms-azuretools.vscode-docker",
+				"Selemondev.shadcn-vue",
+				"EditorConfig.EditorConfig",
 				"ms-playwright.playwright",
-				"storybook.storybook-vscode"
+				"vitest.explorer",
+				"ms-vscode-remote.remote-containers",
+				"formulahendry.auto-close-tag",
+				"formulahendry.auto-rename-tag",
+				"usernamehw.errorlens",
+				"xabikos.JavaScriptSnippets",
+				"christian-kohler.path-intellisense",
+				"bradlc.vscode-tailwindcss"
 			],
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "zsh",

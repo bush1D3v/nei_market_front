@@ -14,8 +14,8 @@ Antes de começar, você **deverá** forkar o repositório do projeto para **seu
 Após o Fork, você **precisará** clonar o repositório forkado para seu **ambiente de desenvolvimento local**:
 
 ```
-git clone https://github.com/{seu-usuario}/navarro_blog_api.git
-cd navarro_blog_api
+git clone https://github.com/{seu-usuario}/nei_market_front.git
+cd nei_market_front
 ```
 
 ### 🆕 Criando uma Branch
@@ -92,8 +92,8 @@ Before you begin, you **must** fork the project repository to **your profile**.
 After Fork, you **will** need to clone the forked repository to your **local development environment**:
 
 ```
-git clone https://github.com/{seu-usuario}/navarro_blog_api.git
-cd navarro_blog_api
+git clone https://github.com/{seu-usuario}/nei_market_front.git
+cd nei_market_front
 ```
 
 ### 🆕 Creating a Branch

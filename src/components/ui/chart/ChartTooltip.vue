@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import numberFormatter from "@/utils/numberFormatter";
 
 defineProps<{
 	title?: string;
@@ -29,7 +30,7 @@ defineProps<{
                     </span>
                     <span>{{ item.name }}</span>
                 </div>
-                <span class="font-semibold ml-4">{{ item.value }}</span>
+                <span class="font-semibold ml-4">{{ numberFormatter(item.value) }}</span>
             </div>
         </CardContent>
     </Card>

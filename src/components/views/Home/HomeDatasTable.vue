@@ -121,7 +121,7 @@ watch(dataType, async (newVal) => {
                             <div>
                                 <span v-html="'&#129689;'"></span>&nbsp;&nbsp;
                                 <span v-translate>
-                                    Cripto moedas
+                                    Criptomoedas
                                 </span>
                             </div>
                             <CheckIcon v-if="dataType === 'cryptos'" />

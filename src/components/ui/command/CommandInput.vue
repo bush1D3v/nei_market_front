@@ -24,7 +24,7 @@ const forwardedProps = useForwardProps(delegatedProps);
 </script>
 
 <template>
-    <div class="flex items-center pl-3" cmdk-input-wrapper>
+    <div class="flex items-center pl-3 w-full" cmdk-input-wrapper>
         <MagnifyingGlassIcon class="mr-2 h-4 w-4 shrink-0 opacity-50" />
         <ComboboxInput v-bind="{ ...forwardedProps, ...$attrs }" auto-focus
             :class="cn('flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-text disabled:cursor-not-allowed disabled:opacity-50', props.class)" />

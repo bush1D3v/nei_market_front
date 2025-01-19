@@ -110,7 +110,7 @@ async function sendMessage(resendMessage?: boolean) {
 		const data: GenerateContentProps = {
 			prompt: userMessage,
 			sessionId: sessionId.value,
-			lastUserMessage: lastUserMessage?.text,
+			lastUserMessage: lastUserMessage?.text || "null",
 			lastBotMessage: lastBotMessage?.text,
 			likeOrDislikePreviousMessage: lastBotMessage?.isLiked
 				? true

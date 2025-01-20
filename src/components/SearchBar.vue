@@ -49,31 +49,31 @@ function handleOpenChange() {
     isFocused.value = !isFocused.value;
 }
 
-const { Meta_J, Ctrl_J } = useMagicKeys({
+const { Meta_K, Ctrl_K } = useMagicKeys({
     passive: false,
     onEventFired(e) {
-        if (e.key === "j" && (e.metaKey || e.ctrlKey)) e.preventDefault();
+        if (e.key === "k" && (e.metaKey || e.ctrlKey)) e.preventDefault();
     },
 });
 
-watch([ Meta_J, Ctrl_J ], (v) => {
+watch([ Meta_K, Ctrl_K ], (v) => {
     if (v[ 0 ] || v[ 1 ]) handleOpenChange();
 });
 
 onMounted(() => {
     blur();
-});
+})
 </script>
 
 <template>
     <Command class="group rounded-lg border shadow-md max-w-80 md:max-w-[450px] mx-0 z-50 relative duration-300">
         <div class="w-full" cmdk-input-wrapper>
             <CommandInput @click="focus" :icon-text="'dark'" :placeholder="t('Pesquisar...')" class="w-full"
-                name="fake-search" />
+                name="fake-search" @keydown.prevent />
         </div>
         <kbd
             class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium text-text opacity-100 absolute top-[10px] right-4 bg-transparent my-0">
-            <span class="text-xs">⌘</span>J
+            <span class="text-xs">⌘</span>K
         </kbd>
         <CommandDialog v-model:open="isFocused" :title="t('Pesquisar')">
             <div class="flex items-center border-b bg-darkAlt pl-4" cmdk-input-wrapper>
@@ -92,12 +92,13 @@ onMounted(() => {
                 <CommandEmpty>
                     <span v-translate>Nenhum resultado encontrado.</span>
                 </CommandEmpty>
-                <CommandGroup heading="Sugestões" v-if="inputValue.length === 0">
-                    <CommandItem value="Criptomoedas" to="/cryptos" @click="saveToLocalStorage(t('Criptomoedas'))">
+                <CommandGroup :heading="t('Sugestões')" v-if="inputValue.length === 0">
+                    <CommandItem :value="t('Criptomoedas')" to="/cryptos"
+                        @click="saveToLocalStorage(t('Criptomoedas'))">
                         <Coins />
                         <span v-translate class="ml-1 text-light">Criptomoedas</span>
                     </CommandItem>
-                    <CommandItem value="Ações" to="/stocks" @click="saveToLocalStorage(t('Ações'))">
+                    <CommandItem :value="t('Ações')" to="/stocks" @click="saveToLocalStorage(t('Ações'))">
                         <BriefcaseBusiness />
                         <span v-translate class="ml-1 text-light">Ações</span>
                     </CommandItem>

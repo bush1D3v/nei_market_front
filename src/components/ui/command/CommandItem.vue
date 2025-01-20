@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { type HTMLAttributes, computed, ref } from "vue";
+import { type HTMLAttributes, computed } from "vue";
 import type { ComboboxItemEmits, ComboboxItemProps } from "radix-vue";
 import { ComboboxItem, useForwardPropsEmits } from "radix-vue";
 import { cn } from "@/lib/utils";
 import RouterLink from "@/tags/RouterLink.vue";
-
-//TODO: SER CLICAVEL POR SETA E ENTER DO TECLADO EM SEARCH BAR
 
 const props = defineProps<
     ComboboxItemProps & {
@@ -25,9 +23,10 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
 
 <template>
     <ComboboxItem v-bind="forwarded"
-        :class="cn('relative flex cursor-default select-none items-center rounded-sm text-sm outline-none data-[highlighted]:bg-accent data-[disabled]:pointer-events-none data-[disabled]:opacity-50', props.class)">
+        :class="cn('relative flex cursor-default select-none items-center rounded-sm text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50', props.class)">
         <template v-if="props.to">
-            <RouterLink :to="props.to" class="w-full h-full flex items-center gap-2 px-2 py-1.5 hover:opacity-75">
+            <RouterLink :to="props.to"
+                class="w-full h-full flex items-center gap-2 px-2 py-1.5 hover:opacity-75 focus:opacity-75 focus:bg-accent">
                 <slot />
             </RouterLink>
         </template>

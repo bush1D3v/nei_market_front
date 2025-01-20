@@ -1,7 +1,7 @@
 import router from '@/router';
-import { t, changeLanguage } from 'i18next';
 import * as Lucid from "lucide-vue-next";
 import type { FunctionalComponent } from 'vue';
+
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class RoutesEnum {
     private static getRouteNames() {
@@ -43,9 +43,7 @@ export class RoutesEnum {
             return "";
         }
 
-        const translatedNames = Object.values(RoutesEnum.getRouteNames()).map(name => t(name));
-
-        for (const text of Object.values(translatedNames)) {
+        for (const text of Object.values(RoutesEnum.getRouteNames())) {
             const lowerCaseText = text.toLowerCase();
             const lowerCaseInput = input.toLowerCase();
 
@@ -76,7 +74,6 @@ export class RoutesEnum {
         return closestMatch;
     }
 
-    //TODO: entender pq nas traducoes as rotas nao sao encontradas
     public static findClosestRouteMatch(input: string): string {
         const closestTextMatch = RoutesEnum.findClosestTextMatch(input);
 

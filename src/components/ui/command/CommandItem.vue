@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { type HTMLAttributes, computed } from "vue";
-import type { ComboboxItemEmits, ComboboxItemProps } from "radix-vue";
-import { ComboboxItem, useForwardPropsEmits } from "radix-vue";
-import { cn } from "@/lib/utils";
+import {type HTMLAttributes, computed} from "vue";
+import type {ComboboxItemEmits, ComboboxItemProps} from "radix-vue";
+import {ComboboxItem, useForwardPropsEmits} from "radix-vue";
+import {cn} from "@/lib/utils";
 import RouterLink from "@/tags/RouterLink.vue";
 
 const props = defineProps<
-    ComboboxItemProps & {
-        class?: HTMLAttributes[ "class" ];
-        to?: string;
-    }
+	ComboboxItemProps & {
+		class?: HTMLAttributes["class"];
+		to?: string;
+	}
 >();
 const emits = defineEmits<ComboboxItemEmits>();
 
 const delegatedProps = computed(() => {
-    const { class: _, ...delegated } = props;
-    return delegated;
+	const {class: _, ...delegated} = props;
+	return delegated;
 });
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits);

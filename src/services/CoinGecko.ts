@@ -9,6 +9,7 @@ import type {PriceChangePercentage} from "@/types/CoinGecko/PriceChangePercentag
 import {bus} from "@/events/coinGeckoEventEmitter";
 import {get} from "@/server/HttpClient";
 import translate from "@/utils/externalDataTranslator";
+import type {SearchCrypto} from "@/types/CoinGecko/SearchCrypto";
 
 /**
  * @description Handles the request to get the cryptocurrency listing.
@@ -104,6 +105,30 @@ export async function detailCrypto(slug: string): Promise<CryptoCompleted | unde
 		bus.emit("getDetailedCrypto", {crypto, slug});
 
 		return crypto;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
+
+/**
+ * @description Handles the request to get the cryptocurrency based on th query.
+ *
+ * @param {string} query - The query string
+ * @returns Promise<SearchCrypto[] | undefined>
+ * @throws {Error} If the request to the proxy fails
+ */
+export async function searchCryptos(query: string): Promise<SearchCrypto[] | undefined> {
+	const url = `/coins/search?query=${query}`;
+
+	try {
+		const response = await get(url);
+
+		if (!response.ok) throw new Error(await response.json());
+
+		const cryptos: SearchCrypto[] = await response.json();
+
+		return cryptos.slice(0, 7);
 	} catch (error) {
 		console.error(error);
 		throw error;

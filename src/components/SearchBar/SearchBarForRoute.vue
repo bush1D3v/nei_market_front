@@ -1,68 +1,68 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
-import { useMagicKeys } from "@vueuse/core";
-import { RoutesEnum } from "@/enum/RoutesEnum";
-import { t } from "i18next";
+import {onMounted, ref, watch} from "vue";
+import {useMagicKeys} from "@vueuse/core";
+import {RoutesEnum} from "@/enum/RoutesEnum";
+import {t} from "i18next";
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-    CommandSeparator,
-    CommandDialog,
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	CommandList,
+	CommandSeparator,
+	CommandDialog,
 } from "@/components/ui/command";
-import { Coins, BriefcaseBusiness } from "lucide-vue-next";
+import {Coins, BriefcaseBusiness} from "lucide-vue-next";
 
 const inputValue = ref<string>("");
-const searchValue = JSON.parse(localStorage.getItem("searchValue") || "[]") as string[];
+const searchValue = JSON.parse(localStorage.getItem("searchRouteValue") || "[]") as string[];
 
 function saveToLocalStorage(input: string): void {
-    const treatedValue = RoutesEnum.findClosestTextMatch(input) as string;
-    if (
-        !searchValue.includes(treatedValue) &&
-        treatedValue !== undefined &&
-        treatedValue !== "" &&
-        treatedValue !== null
-    ) {
-        if (searchValue.length === 4) {
-            searchValue.pop();
-        }
-        searchValue.unshift(treatedValue);
-    }
-    localStorage.setItem("searchValue", JSON.stringify(searchValue));
-    inputValue.value = "";
-    blur();
+	const treatedValue = RoutesEnum.findClosestTextMatch(input) as string;
+	if (
+		!searchValue.includes(treatedValue) &&
+		treatedValue !== undefined &&
+		treatedValue !== "" &&
+		treatedValue !== null
+	) {
+		if (searchValue.length === 4) {
+			searchValue.pop();
+		}
+		searchValue.unshift(treatedValue);
+	}
+	localStorage.setItem("searchRouteValue", JSON.stringify(searchValue));
+	inputValue.value = "";
+	blur();
 }
 
-const isFocused = ref(false);
+const isFocused = ref<boolean>(false);
 
 function focus() {
-    inputValue.value = "";
-    isFocused.value = true;
+	inputValue.value = "";
+	isFocused.value = true;
 }
 function blur() {
-    isFocused.value = false;
+	isFocused.value = false;
 }
 function handleOpenChange() {
-    isFocused.value = !isFocused.value;
+	isFocused.value = !isFocused.value;
 }
 
-const { Meta_K, Ctrl_K } = useMagicKeys({
-    passive: false,
-    onEventFired(e) {
-        if (e.key === "k" && (e.metaKey || e.ctrlKey)) e.preventDefault();
-    },
+const {Meta_K, Ctrl_K} = useMagicKeys({
+	passive: false,
+	onEventFired(e) {
+		if (e.key === "k" && (e.metaKey || e.ctrlKey)) e.preventDefault();
+	},
 });
 
-watch([ Meta_K, Ctrl_K ], (v) => {
-    if (v[ 0 ] || v[ 1 ]) handleOpenChange();
+watch([Meta_K, Ctrl_K], (v) => {
+	if (v[0] || v[1]) handleOpenChange();
 });
 
 onMounted(() => {
-    blur();
-})
+	blur();
+});
 </script>
 
 <template>

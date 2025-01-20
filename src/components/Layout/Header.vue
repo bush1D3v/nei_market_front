@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import Dropdown from "@/components/Dropdown.vue";
-import SearchBar from "@/components/SearchBar.vue";
+import SearchCryptoBar from "@/components/SearchBar/SearchBarForCrypto.vue";
+import SearchRouteBar from "@/components/SearchBar/SearchBarForRoute.vue";
 import ToggleTheme from "@/components/ToggleTheme.vue";
 import Image from "@/tags/Image.vue";
 import RouterLink from "@/tags/RouterLink.vue";
@@ -21,7 +22,8 @@ import {DropdownDto} from "@/components/Dto/DropdownDto";
             <Dropdown class="hidden lg:block" buttonTile="Mercados" label="Tópicos" :menu="DropdownDto" />
         </div>
         <div class="justify-center w-full max-w-80">
-            <SearchBar />
+            <SearchCryptoBar v-if="$route.path.includes('/cryptos')" />
+            <SearchRouteBar v-else />
         </div>
         <div class="justify-end flex gap-8 items-center">
             <RouterLink to="/news" class="hidden lg:flex">

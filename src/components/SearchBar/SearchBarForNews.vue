@@ -12,42 +12,31 @@ import {
     CommandSeparator,
     CommandDialog,
 } from "@/components/ui/command";
-import { useCryptoCurrencyStore } from "@/stores/useCryptoCurrencyStore";
-import type { SearchCrypto } from "@/types/CoinGecko/SearchCrypto";
-import { listCryptoCurrencies, searchCryptos } from "@/services/CoinGecko";
 import Image from "@/tags/Image.vue";
-import type { CryptoCurrency } from "@/types/CoinGecko/CryptoCurrency";
 import ChatDots from "../Loading/ChatDots.vue";
+import { useNewsStore } from "@/stores/useNewsStore";
+import type { New } from "@/types/Finnhub/New";
+import { listMarketNews } from "@/services/Finnhub";
 
-interface StorageSearchCrypto {
-    id: string;
-    name: string;
-    thumb: string;
-    api_symbol?: string;
-    symbol?: string;
-    market_cap_rank?: number;
-    large?: string;
-}
-
-const { cryptoCurrencies } = useCryptoCurrencyStore();
+const newsStore = useNewsStore();
 
 const inputValue = ref<string>("");
 const loading = ref<boolean>(false);
 const error = ref<boolean>(false);
-const searchResponse = ref<SearchCrypto[]>([]);
+const searchResponse = ref<New[]>([]);
 
 const searchValue = JSON.parse(
-    localStorage.getItem("searchCryptoValue") || "[]",
-) as StorageSearchCrypto[];
+    localStorage.getItem("searchNewValue") || "[]",
+) as New[];
 
 let debounceTimeout: NodeJS.Timeout;
 
-async function getCryptosToRecommend(): Promise<void> {
-    if (cryptoCurrencies.length >= 2) return;
+async function getNewsToRecommend(): Promise<void> {
+    if (newsStore.news.crypto.length >= 2) return;
 
     loading.value = true;
     try {
-        await listCryptoCurrencies();
+        await listMarketNews();
     } catch (err) {
         console.error(err);
         error.value = true;
@@ -56,12 +45,12 @@ async function getCryptosToRecommend(): Promise<void> {
     }
 }
 
-async function searchCrypto(input: string): Promise<void> {
+function searchCrypto(input: string): void {
     if (input.length === 0) return;
 
     try {
-        const data = (await searchCryptos(input)) as SearchCrypto[];
-        searchResponse.value = data;
+        const data = newsStore.searchNews(input) as New[];
+        searchResponse.value = data.slice(0, 7);
     } catch (err) {
         console.error(err);
         error.value = true;
@@ -80,14 +69,14 @@ function debounceSearch(input: string): void {
     }, 500);
 }
 
-function saveToLocalStorage(searchCrypto: StorageSearchCrypto): void {
+function saveToLocalStorage(searchCrypto: New): void {
     if (!searchValue.some((item) => item.id === searchCrypto.id)) {
         if (searchValue.length === 4) {
             searchValue.pop();
         }
         searchValue.unshift(searchCrypto);
     }
-    localStorage.setItem("searchCryptoValue", JSON.stringify(searchValue));
+    localStorage.setItem("searchNewValue", JSON.stringify(searchValue));
     inputValue.value = "";
     blur();
 }
@@ -117,7 +106,7 @@ watch([ Meta_K, Ctrl_K ], (v) => {
 });
 
 onMounted(async () => {
-    await getCryptosToRecommend();
+    await getNewsToRecommend();
     blur();
 });
 </script>
@@ -140,9 +129,10 @@ onMounted(async () => {
             <CommandList>
                 <CommandGroup :heading="t('Recentes')" v-if="searchValue.length > 0 && inputValue.length === 0">
                     <CommandItem @click="saveToLocalStorage(item)" v-for="item in searchValue" :key="item.id"
-                        :to="`/cryptos/${item.id}`" :value="`${item.name} recent`">
-                        <Image :alt="`${item.name} image`" :src="item.thumb" width="24" height="24" />
-                        <span class="ml-1 text-light">{{ item.name }}</span>
+                        :to="item.url" :value="`${item.headline} recent`" target="_blank">
+                        <Image :alt="`${item.headline} image`" :src="item.image" width="28" height="28"
+                            class="object-contain" />
+                        <span class="ml-1 text-light line-clamp-1">{{ item.headline }}</span>
                     </CommandItem>
                 </CommandGroup>
                 <CommandSeparator />
@@ -152,18 +142,19 @@ onMounted(async () => {
                     <span v-if="error" v-translate>Erro Interno do Servidor</span>
                 </CommandEmpty>
                 <CommandGroup :heading="t('Sugestões')" v-if="inputValue.length === 0">
-                    <CommandItem v-for="(data) in cryptoCurrencies.slice(0, 2)" :key="data.id" :value="data.name"
-                        :to="`/cryptos/${data.id}`"
-                        @click="saveToLocalStorage({ id: data.id, name: data.name, thumb: data.image })">
-                        <Image :alt="`${data.name} image`" :src="data.image" width="24" height="24" />
-                        <span class="ml-1 text-light">{{ data.name }}</span>
+                    <CommandItem v-for="(data) in newsStore.news.crypto.slice(0, 2)" :key="data.id"
+                        :value="data.headline" :to="data.url" @click="saveToLocalStorage(data)" target="_blank">
+                        <Image :alt="`${data.headline} image`" :src="data.image" width="28" height="28"
+                            class="object-contain" />
+                        <span class="ml-1 text-light line-clamp-1">{{ data.headline }}</span>
                     </CommandItem>
                 </CommandGroup>
                 <CommandGroup :heading="t('Recomendado')" v-if="inputValue.length > 0">
-                    <CommandItem v-if="!loading" v-for="data in searchResponse" :value="data.name"
-                        :to="`/cryptos/${data.id}`" @click="saveToLocalStorage(data)" :key="data.id">
-                        <Image :alt="`${data.name} image`" :src="data.thumb" width="24" height="24" />
-                        <span class="ml-1 text-light">{{ data.name }}</span>
+                    <CommandItem v-if="!loading" v-for="data in searchResponse" :value="data.headline" :to="data.url"
+                        @click="saveToLocalStorage(data)" :key="data.id" target="_blank">
+                        <Image :alt="`${data.headline} image`" :src="data.image" width="28" height="28"
+                            class="object-contain" />
+                        <span class="ml-1 text-light line-clamp-1">{{ data.headline }}</span>
                     </CommandItem>
                 </CommandGroup>
             </CommandList>

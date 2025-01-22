@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import {t} from "i18next";
-import {ref, watch} from "vue";
+import { ref, watch } from "vue";
 import CurrencySelect from "@/components/views/Tools/CurrencyConverter/CurrencySelect.vue";
 import ValueSelect from "@/components/views/Tools/CurrencyConverter/ValueSelect.vue";
 import Dialog from "@/components/views/Tools/CurrencyConverter/Dialog.vue";
 import Tooltip from "@/components/Tooltip.vue";
-import type {Rates} from "@/types/CurrencyQuotes/Rates";
-import {DoubleArrowRightIcon} from "@radix-icons/vue";
-import {useCurrencyQuotesStore} from "@/stores/useCurrencyQuotesStore";
-import {listCurrencyQuotes} from "@/services/CurrencyQuotes";
-import {Button} from "@/components/ui/button";
-import {CurrencyQuotesDtoValues} from "@/components/Dto/CurrencyQuotesDtoValues";
+import type { Rates } from "@/types/CurrencyQuotes/Rates";
+import { DoubleArrowRightIcon } from "@radix-icons/vue";
+import { useCurrencyQuotesStore } from "@/stores/useCurrencyQuotesStore";
+import { listCurrencyQuotes } from "@/services/CurrencyQuotes";
+import { Button } from "@/components/ui/button";
+import { CurrencyQuotesDtoValues } from "@/components/Dto/CurrencyQuotesDtoValues";
 
 const currencyQuotesStore = useCurrencyQuotesStore();
 
@@ -19,48 +18,48 @@ const isModalOpen = ref(false);
 const crossRateResult = ref<number>();
 
 async function calculateCrossRate(): Promise<void> {
-	isLoading.value = true;
-	let rates: Rates;
+    isLoading.value = true;
+    let rates: Rates;
 
-	if (currencyQuotesStore.currencyQuotes?.rates) {
-		rates = currencyQuotesStore.currencyQuotes.rates;
-	} else {
-		const data = await listCurrencyQuotes();
+    if (currencyQuotesStore.currencyQuotes?.rates) {
+        rates = currencyQuotesStore.currencyQuotes.rates;
+    } else {
+        const data = await listCurrencyQuotes();
 
-		if (data) {
-			rates = data.rates;
-		} else {
-			rates = CurrencyQuotesDtoValues;
-		}
-	}
+        if (data) {
+            rates = data.rates;
+        } else {
+            rates = CurrencyQuotesDtoValues;
+        }
+    }
 
-	const rightRate = rates[currencyQuotesStore.rightCode as keyof typeof rates];
-	const leftRate = rates[currencyQuotesStore.leftCode as keyof typeof rates];
+    const rightRate = rates[ currencyQuotesStore.rightCode as keyof typeof rates ];
+    const leftRate = rates[ currencyQuotesStore.leftCode as keyof typeof rates ];
 
-	crossRateResult.value = (rightRate / leftRate) * currencyQuotesStore.currency;
-	isLoading.value = false;
-	isModalOpen.value = true;
+    crossRateResult.value = (rightRate / leftRate) * currencyQuotesStore.currency;
+    isLoading.value = false;
+    isModalOpen.value = true;
 }
 
 watch(
-	() => currencyQuotesStore.leftCode,
-	(value) => {
-		currencyQuotesStore.leftCode = value;
-	},
+    () => currencyQuotesStore.leftCode,
+    (value) => {
+        currencyQuotesStore.leftCode = value;
+    },
 );
 
 watch(
-	() => currencyQuotesStore.rightCode,
-	(value) => {
-		currencyQuotesStore.rightCode = value;
-	},
+    () => currencyQuotesStore.rightCode,
+    (value) => {
+        currencyQuotesStore.rightCode = value;
+    },
 );
 
 watch(
-	() => currencyQuotesStore.currency,
-	(value) => {
-		currencyQuotesStore.currency = value;
-	},
+    () => currencyQuotesStore.currency,
+    (value) => {
+        currencyQuotesStore.currency = value;
+    },
 );
 </script>
 
@@ -68,18 +67,18 @@ watch(
     <section class="max-w-5xl h-[80dvh] flex flex-col justify-center m-auto py-2 px-4">
         <div>
             <div class="flex items-center justify-between space-x-4">
-                <h4 class="text-base md:text-xl lg:text-2xl pr-28">
-                    {{ t("Conversor de Moedas") }}
+                <h4 v-translate class="text-base md:text-xl lg:text-2xl pr-28">
+                    Conversor de Moedas
                 </h4>
             </div>
             <div class="space-y-2 flex flex-col gap-4">
                 <div class="flex justify-between mt-2">
                     <div>
-                        <p class="text-text">{{ t("De") }}</p>
+                        <p v-translate class="text-text">De</p>
                         <CurrencySelect direction="left" />
                     </div>
                     <div>
-                        <p class="text-text">{{ t("Para") }}</p>
+                        <p v-translate class="text-text">Para</p>
                         <CurrencySelect direction="right" />
                     </div>
                 </div>
@@ -95,7 +94,7 @@ watch(
                             </Button>
                         </template>
                         <template #content>
-                            <p class="text-text">{{ t("Inverter") }}</p>
+                            <p v-translate class="text-text">Inverter</p>
                         </template>
                     </Tooltip>
                     <hr class="h-[1px] w-5/12" />
@@ -105,8 +104,8 @@ watch(
                 </div>
                 <Dialog v-model:open="isModalOpen" :result="crossRateResult">
                     <template #trigger>
-                        <Button class="w-full" @click="calculateCrossRate">
-                            {{ isLoading ? t("Convertendo...") : t("Converter") }}
+                        <Button v-translate class="w-full" @click="calculateCrossRate">
+                            {{ isLoading ? "Convertendo..." : "Converter" }}
                         </Button>
                     </template>
                 </Dialog>

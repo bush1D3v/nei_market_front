@@ -1,35 +1,34 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
-import { useMagicKeys } from "@vueuse/core";
-import { t } from "i18next";
+import {onMounted, ref, watch} from "vue";
+import {useMagicKeys} from "@vueuse/core";
+import {t} from "i18next";
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-    CommandSeparator,
-    CommandDialog,
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	CommandList,
+	CommandSeparator,
+	CommandDialog,
 } from "@/components/ui/command";
-import { useCryptoCurrencyStore } from "@/stores/useCryptoCurrencyStore";
-import type { SearchCrypto } from "@/types/CoinGecko/SearchCrypto";
-import { listCryptoCurrencies, searchCryptos } from "@/services/CoinGecko";
+import {useCryptoCurrencyStore} from "@/stores/useCryptoCurrencyStore";
+import type {SearchCrypto} from "@/types/CoinGecko/SearchCrypto";
+import {listCryptoCurrencies, searchCryptos} from "@/services/CoinGecko";
 import Image from "@/tags/Image.vue";
-import type { CryptoCurrency } from "@/types/CoinGecko/CryptoCurrency";
 import ChatDots from "../Loading/ChatDots.vue";
 
 interface StorageSearchCrypto {
-    id: string;
-    name: string;
-    thumb: string;
-    api_symbol?: string;
-    symbol?: string;
-    market_cap_rank?: number;
-    large?: string;
+	id: string;
+	name: string;
+	thumb: string;
+	api_symbol?: string;
+	symbol?: string;
+	market_cap_rank?: number;
+	large?: string;
 }
 
-const { cryptoCurrencies } = useCryptoCurrencyStore();
+const {cryptoCurrencies} = useCryptoCurrencyStore();
 
 const inputValue = ref<string>("");
 const loading = ref<boolean>(false);
@@ -37,88 +36,73 @@ const error = ref<boolean>(false);
 const searchResponse = ref<SearchCrypto[]>([]);
 
 const searchValue = JSON.parse(
-    localStorage.getItem("searchCryptoValue") || "[]",
+	localStorage.getItem("searchCryptoValue") || "[]",
 ) as StorageSearchCrypto[];
 
 let debounceTimeout: NodeJS.Timeout;
 
-async function getCryptosToRecommend(): Promise<void> {
-    if (cryptoCurrencies.length >= 2) return;
-
-    loading.value = true;
-    try {
-        await listCryptoCurrencies();
-    } catch (err) {
-        console.error(err);
-        error.value = true;
-    } finally {
-        loading.value = false;
-    }
-}
-
 async function searchCrypto(input: string): Promise<void> {
-    if (input.length === 0) return;
+	if (input.length === 0) return;
 
-    try {
-        const data = (await searchCryptos(input)) as SearchCrypto[];
-        searchResponse.value = data;
-    } catch (err) {
-        console.error(err);
-        error.value = true;
-    } finally {
-        loading.value = false;
-    }
+	try {
+		const data = (await searchCryptos(input)) as SearchCrypto[];
+		searchResponse.value = data;
+	} catch (err) {
+		console.error(err);
+		error.value = true;
+	} finally {
+		loading.value = false;
+	}
 }
 
 function debounceSearch(input: string): void {
-    inputValue.value = input;
-    loading.value = true;
+	inputValue.value = input;
+	loading.value = true;
 
-    clearTimeout(debounceTimeout);
-    debounceTimeout = setTimeout(() => {
-        searchCrypto(input);
-    }, 500);
+	clearTimeout(debounceTimeout);
+	debounceTimeout = setTimeout(() => {
+		searchCrypto(input);
+	}, 500);
 }
 
 function saveToLocalStorage(searchCrypto: StorageSearchCrypto): void {
-    if (!searchValue.some((item) => item.id === searchCrypto.id)) {
-        if (searchValue.length === 4) {
-            searchValue.pop();
-        }
-        searchValue.unshift(searchCrypto);
-    }
-    localStorage.setItem("searchCryptoValue", JSON.stringify(searchValue));
-    inputValue.value = "";
-    blur();
+	if (!searchValue.some((item) => item.id === searchCrypto.id)) {
+		if (searchValue.length === 4) {
+			searchValue.pop();
+		}
+		searchValue.unshift(searchCrypto);
+	}
+	localStorage.setItem("searchCryptoValue", JSON.stringify(searchValue));
+	inputValue.value = "";
+	blur();
 }
 
 const isFocused = ref<boolean>(false);
 
 function focus() {
-    inputValue.value = "";
-    isFocused.value = true;
+	inputValue.value = "";
+	isFocused.value = true;
 }
 function blur() {
-    isFocused.value = false;
+	isFocused.value = false;
 }
 function handleOpenChange() {
-    isFocused.value = !isFocused.value;
+	isFocused.value = !isFocused.value;
 }
 
-const { Meta_K, Ctrl_K } = useMagicKeys({
-    passive: false,
-    onEventFired(e) {
-        if (e.key === "k" && (e.metaKey || e.ctrlKey)) e.preventDefault();
-    },
+const {Meta_K, Ctrl_K} = useMagicKeys({
+	passive: false,
+	onEventFired(e) {
+		if (e.key === "k" && (e.metaKey || e.ctrlKey)) e.preventDefault();
+	},
 });
 
-watch([ Meta_K, Ctrl_K ], (v) => {
-    if (v[ 0 ] || v[ 1 ]) handleOpenChange();
+watch([Meta_K, Ctrl_K], (v) => {
+	if (v[0] || v[1]) handleOpenChange();
 });
 
-onMounted(async () => {
-    await getCryptosToRecommend();
-    blur();
+onMounted(() => {
+	blur();
 });
 </script>
 

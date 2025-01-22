@@ -12,29 +12,29 @@ import {
 	CommandSeparator,
 	CommandDialog,
 } from "@/components/ui/command";
+import type {Stock} from "@/types/BrapiDev/Stock";
+import {useStocksCurrencyStore} from "@/stores/useStocksCurrencyStore";
+import {listStocks} from "@/services/BrapiDev";
 import Image from "@/tags/Image.vue";
 import ChatDots from "../Loading/ChatDots.vue";
-import {useNewsStore} from "@/stores/useNewsStore";
-import type {New} from "@/types/Finnhub/New";
-import {listMarketNews} from "@/services/Finnhub";
 
-const newsStore = useNewsStore();
+const {stocksCurrencies} = useStocksCurrencyStore();
 
 const inputValue = ref<string>("");
 const loading = ref<boolean>(false);
 const error = ref<boolean>(false);
-const searchResponse = ref<New[]>([]);
+const searchResponse = ref<Stock[]>([]);
 
-const searchValue = JSON.parse(localStorage.getItem("searchNewValue") || "[]") as New[];
+const searchValue = JSON.parse(localStorage.getItem("searchStockValue") || "[]") as Stock[];
 
 let debounceTimeout: NodeJS.Timeout;
 
-function searchCrypto(input: string): void {
+async function searchStock(input: string): Promise<void> {
 	if (input.length === 0) return;
 
 	try {
-		const data = newsStore.searchNews(input) as New[];
-		searchResponse.value = data.slice(0, 7);
+		const data = (await listStocks(6, 1, undefined, undefined, input)) as Stock[];
+		searchResponse.value = data;
 	} catch (err) {
 		console.error(err);
 		error.value = true;
@@ -49,18 +49,18 @@ function debounceSearch(input: string): void {
 
 	clearTimeout(debounceTimeout);
 	debounceTimeout = setTimeout(() => {
-		searchCrypto(input);
+		searchStock(input);
 	}, 500);
 }
 
-function saveToLocalStorage(searchCrypto: New): void {
-	if (!searchValue.some((item) => item.id === searchCrypto.id)) {
+function saveToLocalStorage(searchStock: Stock): void {
+	if (!searchValue.some((item) => item.stock === searchStock.stock)) {
 		if (searchValue.length === 4) {
 			searchValue.pop();
 		}
-		searchValue.unshift(searchCrypto);
+		searchValue.unshift(searchStock);
 	}
-	localStorage.setItem("searchNewValue", JSON.stringify(searchValue));
+	localStorage.setItem("searchStockValue", JSON.stringify(searchValue));
 	inputValue.value = "";
 	blur();
 }
@@ -89,7 +89,7 @@ watch([Meta_K, Ctrl_K], (v) => {
 	if (v[0] || v[1]) handleOpenChange();
 });
 
-onMounted(() => {
+onMounted(async () => {
 	blur();
 });
 </script>
@@ -111,11 +111,11 @@ onMounted(() => {
             </div>
             <CommandList>
                 <CommandGroup :heading="t('Recentes')" v-if="searchValue.length > 0 && inputValue.length === 0">
-                    <CommandItem @click="saveToLocalStorage(item)" v-for="item in searchValue" :key="item.id"
-                        :to="item.url" :value="`${item.headline} recent`" target="_blank">
-                        <Image :alt="`${item.headline} image`" :src="item.image" width="28" height="28"
-                            class="object-contain" />
-                        <span class="ml-1 text-light line-clamp-1">{{ item.headline }}</span>
+                    <CommandItem @click="saveToLocalStorage(item)" v-for="item in searchValue" :key="item.stock"
+                        :to="`/stocks/${item.stock}`" :value="`${item.name} recent`">
+                        <Image :alt="`${item.name} image`" :src="item.logo" width="25.7" height="25.7"
+                            class="rounded-full" />
+                        <span class="ml-1 text-light">{{ item.name }}</span>
                     </CommandItem>
                 </CommandGroup>
                 <CommandSeparator />
@@ -125,19 +125,19 @@ onMounted(() => {
                     <span v-if="error" v-translate>Erro Interno do Servidor</span>
                 </CommandEmpty>
                 <CommandGroup :heading="t('Sugestões')" v-if="inputValue.length === 0">
-                    <CommandItem v-for="(data) in newsStore.news.crypto.slice(0, 2)" :key="data.id"
-                        :value="data.headline" :to="data.url" @click="saveToLocalStorage(data)" target="_blank">
-                        <Image :alt="`${data.headline} image`" :src="data.image" width="28" height="28"
-                            class="object-contain" />
-                        <span class="ml-1 text-light line-clamp-1">{{ data.headline }}</span>
+                    <CommandItem v-for="(data) in stocksCurrencies.slice(0, 2)" :key="data.stock" :value="data.name"
+                        :to="`/stocks/${data.stock}`" @click="saveToLocalStorage(data)">
+                        <Image :alt="`${data.name} image`" :src="data.logo" width="25.7" height="25.7"
+                            class="rounded-full" />
+                        <span class="ml-1 text-light">{{ data.name }}</span>
                     </CommandItem>
                 </CommandGroup>
                 <CommandGroup :heading="t('Recomendado')" v-if="inputValue.length > 0">
-                    <CommandItem v-if="!loading" v-for="data in searchResponse" :value="data.headline" :to="data.url"
-                        @click="saveToLocalStorage(data)" :key="data.id" target="_blank">
-                        <Image :alt="`${data.headline} image`" :src="data.image" width="28" height="28"
-                            class="object-contain" />
-                        <span class="ml-1 text-light line-clamp-1">{{ data.headline }}</span>
+                    <CommandItem v-if="!loading" v-for="data in searchResponse" :value="data.name"
+                        :to="`/stocks/${data.stock}`" @click="saveToLocalStorage(data)" :key="data.stock">
+                        <Image :alt="`${data.name} image`" :src="data.logo" width="25.7" height="25.7"
+                            class="rounded-full" />
+                        <span class="ml-1 text-light">{{ data.name }}</span>
                     </CommandItem>
                 </CommandGroup>
             </CommandList>

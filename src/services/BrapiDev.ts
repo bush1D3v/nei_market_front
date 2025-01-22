@@ -13,6 +13,9 @@ import translate from "@/utils/externalDataTranslator";
  *
  * @param {number} limit - The limit number of cryptocurrencies to return
  * @param {number} page - The page number of cryptocurrencies to return
+ * @param {SortBy} sortBy - The field to sort by
+ * @param {SortOrder} sortOrder - The order to sort by
+ * @param {string} search - The search query
  * @returns Promise<Stock[] | undefined>
  * @throws {Error} If the request to the proxy fails
  */
@@ -21,13 +24,16 @@ export async function listStocks(
 	page = 1,
 	sortBy?: SortBy,
 	sortOrder?: SortOrder,
+	search?: string,
 ): Promise<Stock[] | undefined> {
 	let url: string;
 
+	const searchQuery = search ? `search=${search}&` : "";
+
 	if (sortBy && sortOrder) {
-		url = `/quote/list?limit=${limit}&page=${page}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+		url = `/quote/list?${searchQuery}limit=${limit}&page=${page}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
 	} else {
-		url = `/quote/list?limit=${limit}&page=${page}`;
+		url = `/quote/list?${searchQuery}limit=${limit}&page=${page}`;
 	}
 
 	try {

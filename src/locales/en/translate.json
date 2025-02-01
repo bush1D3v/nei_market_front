@@ -36,7 +36,7 @@
 	"Vá para criptomoedas": "Go to cryptocurrencies",
 	"Sair": "Logout",
 	"© 2024 Todos os direitos reservados.": "© 2024 All rights reserved.",
-	"Moedas em alta": "Trending coins",
+	"Moedas em Alta": "Trending Coins",
 	"Bolsa de Valores": "Stock Market",
 	"Sobre Nós": "About Us",
 	"Política de Privacidade": "Privacy Policy",
@@ -447,5 +447,8 @@
 	"Recentes": "Recent",
 	"Pesquisar": "Search",
 	"Sugestões": "Suggestions",
-	"Recomendado": "Recommended"
+	"Recomendado": "Recommended",
+	"Notícias do nosso Blog e fontes externas": "News from our Blog and external sources",
+	"Ações com maior variação de preço nas últimas 24 horas": "Stocks with the highest price variation in the last 24 hours",
+	"Criptomoedas mais pesquisadas pelos usuários nas últimas 24 horas": "Cryptocurrencies most searched by users in the last 24 hours"
 }

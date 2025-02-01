@@ -415,7 +415,7 @@
 	"Informações": "Informações",
 	"política de privacidade": "política de privacidade",
 	"👋 Olá! Eu sou a NEI Market AI, pergunte-me qualquer coisa sobre o NEI Market Analytics!": "👋 Olá! Eu sou a NEI Market AI, pergunte-me qualquer coisa sobre o NEI Market Analytics!",
-	"Moedas em alta": "Moedas em alta",
+	"Moedas em Alta": "Moedas em Alta",
 	"Chat recarregado": "Chat recarregado",
 	"Texto copiado para a área de transferência": "Texto copiado para a área de transferência",
 	"Erro ao copiar texto para a área de transferência": "Erro ao copiar texto para a área de transferência",
@@ -446,5 +446,8 @@
 	"Recentes": "Recentes",
 	"Pesquisar": "Pesquisar",
 	"Sugestões": "Sugestões",
-	"Recomendado": "Recomendado"
+	"Recomendado": "Recomendado",
+	"Notícias do nosso Blog e fontes externas": "Notícias do nosso Blog e fontes externas",
+	"Ações com maior variação de preço nas últimas 24 horas": "Ações com maior variação de preço nas últimas 24 horas",
+	"Criptomoedas mais pesquisadas pelos usuários nas últimas 24 horas": "Criptomoedas mais pesquisadas pelos usuários nas últimas 24 horas"
 }

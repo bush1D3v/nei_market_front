@@ -2,17 +2,19 @@
 import Image from "@/tags/Image.vue";
 import RouterLink from "@/tags/RouterLink.vue";
 import numberFormatter from "@/utils/numberFormatter";
-import type {CryptoCurrency} from "@/types/CoinGecko/CryptoCurrency";
+import type {TrendingCryptoCurrency} from "@/types/CoinGecko/TrendingCryptoCurrency";
 import type {Stock} from "@/types/BrapiDev/Stock";
 import type {New} from "@/types/Finnhub/New";
 import Link from "@/tags/Link.vue";
-import {ChevronUpIcon, ChevronDownIcon} from "@radix-icons/vue";
+import Tooltip from "@/components/Tooltip.vue";
+import {ChevronUpIcon, ChevronDownIcon, QuestionMarkCircledIcon} from "@radix-icons/vue";
 
 interface Props {
 	icon: string;
 	tableTitle: string;
 	redirectTo: "/cryptos" | "/news" | "/stocks";
-	coins?: CryptoCurrency[];
+	tooltipText: string;
+	coins?: TrendingCryptoCurrency[];
 	stocks?: Stock[];
 	news?: New[];
 }
@@ -26,6 +28,14 @@ const props = defineProps<Props>();
             <div class="flex gap-1 items-center">
                 <span> {{ props.icon }} </span>
                 <h4 v-translate> {{ props.tableTitle }} </h4>
+                <Tooltip class="max-w-60">
+                    <template #trigger>
+                        <QuestionMarkCircledIcon class="ml-2 w-5 h-5 text-text cursor-pointer" />
+                    </template>
+                    <template #content>
+                        <p v-translate class="text-text font-bold text-sm">{{ props.tooltipText }}</p>
+                    </template>
+                </Tooltip>
             </div>
             <RouterLink v-translate :to="props.redirectTo" target="_self" class="text-link hover:underline mt-2 h-fit">
                 Ver mais
@@ -46,7 +56,7 @@ const props = defineProps<Props>();
             <li v-if="props.coins" v-for="(data, i) in props.coins" :key="i">
                 <div class="li-first-container">
                     <div class="flex gap-2">
-                        <Image class="rounded-full" :src="data.image" :alt="data.name + ' logo'" width="24"
+                        <Image class="rounded-full" :src="data.small" :alt="data.name + ' logo'" width="24"
                             height="24" />
                         <RouterLink :to="`/cryptos/${data.id}`" target="_self" class="hover:underline">
                             <h5 class="line-clamp-1 text-left"> {{ data.name }} </h5>
@@ -55,12 +65,12 @@ const props = defineProps<Props>();
                     <span class="hidden mn:flex text-dark"> {{ data.symbol.toUpperCase() }} </span>
                 </div>
                 <div class="li-second-container">
-                    <span> ${{ numberFormatter(data.current_price) }} </span>
+                    <span> ${{ numberFormatter(data.data.price) }} </span>
                     <span class="change"
-                        :class="{ 'text-positive': data.price_change_percentage_24h > 0, 'text-negative': data.price_change_percentage_24h < 0 }">
-                        <span v-if="data.price_change_percentage_24h > 0"> + </span>
-                        {{ numberFormatter(data.price_change_percentage_24h) }}%&nbsp;
-                        <ChevronUpIcon v-if="data.price_change_percentage_24h > 0" />
+                        :class="{ 'text-positive': data.data.price_change_percentage_24h.usd > 0, 'text-negative': data.data.price_change_percentage_24h.usd < 0 }">
+                        <span v-if="data.data.price_change_percentage_24h.usd > 0"> + </span>
+                        {{ numberFormatter(data.data.price_change_percentage_24h.usd) }}%&nbsp;
+                        <ChevronUpIcon v-if="data.data.price_change_percentage_24h.usd > 0" />
                         <ChevronDownIcon v-else />
                     </span>
                 </div>

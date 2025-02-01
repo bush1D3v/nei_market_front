@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/command";
 import {useCryptoCurrencyStore} from "@/stores/useCryptoCurrencyStore";
 import type {SearchCrypto} from "@/types/CoinGecko/SearchCrypto";
-import {listCryptoCurrencies, searchCryptos} from "@/services/CoinGecko";
+import {searchCryptos} from "@/services/CoinGecko";
 import Image from "@/tags/Image.vue";
 import ChatDots from "../Loading/ChatDots.vue";
 

@@ -2,10 +2,11 @@ import {ref} from "vue";
 import {defineStore} from "pinia";
 import type {CryptoCurrency} from "@/types/CoinGecko/CryptoCurrency";
 import type {CryptoCompleted} from "@/types/CoinGecko/CryptoDetail";
+import type {TrendingCryptoCurrency} from "@/types/CoinGecko/TrendingCryptoCurrency";
 
 export const useCryptoCurrencyStore = defineStore("cryptoCurrency", () => {
 	const cryptoCurrencies = ref<CryptoCurrency[]>([]);
-	const homeTopsTableCryptoCurrencies = ref<CryptoCurrency[]>([]);
+	const homeTopsTableCryptoCurrencies = ref<TrendingCryptoCurrency[]>([]);
 	const cryptosDetails = ref<Record<string, CryptoCompleted>>({});
 
 	function addCryptoDetails(cryptoDetail: CryptoCompleted, slug: string): void {
@@ -20,11 +21,11 @@ export const useCryptoCurrencyStore = defineStore("cryptoCurrency", () => {
 		cryptosDetails.value[slug] = cryptoDetail;
 	}
 
-	function setHomeTopsTableCryptoCurrencies(cryptoCurrencyArray: CryptoCurrency[]): void {
+	function setHomeTopsTableCryptoCurrencies(cryptoCurrencyArray: TrendingCryptoCurrency[]): void {
 		homeTopsTableCryptoCurrencies.value = cryptoCurrencyArray;
 	}
 
-	function getHomeTopsTableCryptoCurrency(id: string): CryptoCurrency | null {
+	function getHomeTopsTableCryptoCurrency(id: string): TrendingCryptoCurrency | null {
 		return homeTopsTableCryptoCurrencies.value.find((crypto) => crypto.id === id) || null;
 	}
 

@@ -8,7 +8,7 @@ import ToggleTheme from "@/components/ToggleTheme.vue";
 import Image from "@/tags/Image.vue";
 import RouterLink from "@/tags/RouterLink.vue";
 import Button from "@/components/ui/button/Button.vue";
-import {DropdownDto} from "@/components/Dto/DropdownDto";
+import { DropdownDto } from "@/components/Dto/DropdownDto";
 </script>
 
 <template>

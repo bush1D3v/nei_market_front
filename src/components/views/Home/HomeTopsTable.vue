@@ -2,21 +2,21 @@
 import Image from "@/tags/Image.vue";
 import RouterLink from "@/tags/RouterLink.vue";
 import numberFormatter from "@/utils/numberFormatter";
-import type {TrendingCryptoCurrency} from "@/types/CoinGecko/TrendingCryptoCurrency";
-import type {Stock} from "@/types/BrapiDev/Stock";
-import type {New} from "@/types/Finnhub/New";
+import type { TrendingCryptoCurrency } from "@/types/CoinGecko/TrendingCryptoCurrency";
+import type { Stock } from "@/types/BrapiDev/Stock";
+import type { New } from "@/types/Finnhub/New";
 import Link from "@/tags/Link.vue";
 import Tooltip from "@/components/Tooltip.vue";
-import {ChevronUpIcon, ChevronDownIcon, QuestionMarkCircledIcon} from "@radix-icons/vue";
+import { ChevronUpIcon, ChevronDownIcon, QuestionMarkCircledIcon } from "@radix-icons/vue";
 
 interface Props {
-	icon: string;
-	tableTitle: string;
-	redirectTo: "/cryptos" | "/news" | "/stocks";
-	tooltipText: string;
-	coins?: TrendingCryptoCurrency[];
-	stocks?: Stock[];
-	news?: New[];
+    icon: string;
+    tableTitle: string;
+    redirectTo: "/cryptos" | "/news" | "/stocks";
+    tooltipText: string;
+    coins?: TrendingCryptoCurrency[];
+    stocks?: Stock[];
+    news?: New[];
 }
 
 const props = defineProps<Props>();
@@ -30,7 +30,7 @@ const props = defineProps<Props>();
                 <h4 v-translate> {{ props.tableTitle }} </h4>
                 <Tooltip class="max-w-60">
                     <template #trigger>
-                        <QuestionMarkCircledIcon class="ml-2 w-5 h-5 text-text cursor-pointer" />
+                        <QuestionMarkCircledIcon class="ml-2 w-5 h-5 text-text" />
                     </template>
                     <template #content>
                         <p v-translate class="text-text font-bold text-sm">{{ props.tooltipText }}</p>

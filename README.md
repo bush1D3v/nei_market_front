@@ -14,6 +14,7 @@ O **NEI Market Analytics** é um projeto de código aberto projetado para fornec
 ## 🛠️ Tecnologias e Ferramentas Utilizadas
 <div align='center'>
    <img align='center' height='50' width='70' title='Vue.js' alt='vuejs' src='https://github.com/devicons/devicon/blob/master/icons/vuejs/vuejs-original.svg' />&nbsp;
+   <img align='center' height='60' width='65' title='TanStack Vue-query' alt='tanstack vue-query' src='https://raw.githubusercontent.com/TanStack/query/main/packages/vue-query/media/vue-query.png' />&nbsp;
    <img align='center' height='50' width='50' title='Shadcn-vue' alt='shadcnvue' src='https://github.com/user-attachments/assets/1d2298ae-03ea-4392-b0d2-e3fc12908bc7' />&nbsp;&nbsp;&nbsp;
    <img align='center' height='50' width='50' title='Pinia' alt='pinia' src='https://github.com/user-attachments/assets/abb5c37c-372d-4f29-b4ba-27fbe1d7c970' />&nbsp;
    <img align='center' height='55' width='55' title='Mitt' alt='mitt' src='https://github.com/user-attachments/assets/f37880f9-d7f9-42ff-ad39-8c3d8fbbecf1' />&nbsp;
@@ -105,6 +106,7 @@ The **NEI Market Analytics** is an open-source project designed to provide compr
 
 <div align='center'>
    <img align='center' height='50' width='70' title='Vue.js' alt='vuejs' src='https://github.com/devicons/devicon/blob/master/icons/vuejs/vuejs-original.svg' />&nbsp;
+   <img align='center' height='60' width='65' title='TanStack Vue-query' alt='tanstack vue-query' src='https://raw.githubusercontent.com/TanStack/query/main/packages/vue-query/media/vue-query.png' />&nbsp;
    <img align='center' height='50' width='50' title='Shadcn-vue' alt='shadcnvue' src='https://github.com/user-attachments/assets/1d2298ae-03ea-4392-b0d2-e3fc12908bc7' />&nbsp;&nbsp;&nbsp;
    <img align='center' height='50' width='50' title='Pinia' alt='pinia' src='https://github.com/user-attachments/assets/abb5c37c-372d-4f29-b4ba-27fbe1d7c970' />&nbsp;
    <img align='center' height='55' width='55' title='Mitt' alt='mitt' src='https://github.com/user-attachments/assets/f37880f9-d7f9-42ff-ad39-8c3d8fbbecf1' />&nbsp;

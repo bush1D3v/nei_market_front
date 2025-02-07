@@ -1,173 +1,172 @@
 <script setup lang="ts">
 import numberFormatter from "@/utils/numberFormatter";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import HomeDatasTableSkeleton from "@/components/Skeletons/components/views/Home/HomeDatasTableSkeleton.vue";
 import Button from "@/components/ui/button/Button.vue";
 import Image from "@/tags/Image.vue";
-import { listStocks } from "@/services/BrapiDev";
-import { listCryptoCurrencies } from "@/services/CoinGecko";
-import { useCryptoCurrencyStore } from "@/stores/useCryptoCurrencyStore";
-import { useStocksCurrencyStore } from "@/stores/useStocksCurrencyStore";
-import { ref, onMounted, watch } from "vue";
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@radix-icons/vue";
-import type { Stock } from "@/types/BrapiDev/Stock";
-import type { CryptoCurrency } from "@/types/CoinGecko/CryptoCurrency";
+import {listStocks} from "@/services/BrapiDev";
+import {listCryptoCurrencies} from "@/services/CoinGecko";
+import {useCryptoCurrencyStore} from "@/stores/useCryptoCurrencyStore";
+import {useStocksCurrencyStore} from "@/stores/useStocksCurrencyStore";
+import {ref, watch, onMounted} from "vue";
+import {CheckIcon, ChevronDownIcon, ChevronUpIcon} from "@radix-icons/vue";
+import type {Stock} from "@/types/BrapiDev/Stock";
+import type {CryptoCurrency} from "@/types/CoinGecko/CryptoCurrency";
+import {useInfiniteQuery} from "@tanstack/vue-query";
 
-const stocksStore = useStocksCurrencyStore();
-const cryptoStore = useCryptoCurrencyStore();
+const {stocksCurrencies} = useStocksCurrencyStore();
+const {cryptoCurrencies} = useCryptoCurrencyStore();
 
-const isLoading = ref<boolean>(true);
-const isLoadingMore = ref<boolean>(false);
-const cryptoStart = ref<number>(1);
-const stocksPage = ref<number>(1);
-const error = ref<boolean>(false);
+const dataType = ref<"cryptos" | "stocks">(
+	(localStorage.getItem("dataType") as "cryptos" | "stocks" | null) ?? "stocks",
+);
 const tableData = ref<Stock[] | CryptoCurrency[]>([]);
-const initialTableData = ref<Stock[] | CryptoCurrency[]>([]);
+const initialTableData = ref<Stock[] | CryptoCurrency[]>(
+	dataType.value === "cryptos" ? cryptoCurrencies : stocksCurrencies,
+);
+
+const {
+	data: stocksData,
+	fetchNextPage: fetchNextStocksPage,
+	isLoading: isLoadingStocks,
+	isFetchingNextPage: isFetchingNextStocksPage,
+	refetch: refetchStocks,
+} = useInfiniteQuery({
+	queryKey: ["stocks"],
+	queryFn: async ({pageParam}) => await listStocks(12, pageParam),
+	getNextPageParam: (_lastPage, allPages) => allPages.length + 1,
+	enabled: dataType.value === "stocks" && stocksCurrencies.length === 0,
+	initialPageParam: stocksCurrencies.length / 12 + 1,
+});
+
+const {
+	data: cryptosData,
+	fetchNextPage: fetchNextCryptosPage,
+	isLoading: isLoadingCryptos,
+	isFetchingNextPage: isFetchingNextCryptosPage,
+	refetch: refetchCryptos,
+} = useInfiniteQuery({
+	queryKey: ["cryptos"],
+	queryFn: async ({pageParam}) => await listCryptoCurrencies(12, pageParam),
+	getNextPageParam: (_lastPage, allPages) => allPages.length + 1,
+	enabled: dataType.value === "cryptos" && cryptoCurrencies.length === 0,
+	initialPageParam: cryptoCurrencies.length / 12 + 1,
+});
 
 interface TableCellsOrdination {
-    price: "default" | "asc" | "desc";
-    percentage: "default" | "asc" | "desc";
-    volume: "default" | "asc" | "desc";
-    market_cap: "default" | "asc" | "desc";
+	price: "default" | "asc" | "desc";
+	percentage: "default" | "asc" | "desc";
+	volume: "default" | "asc" | "desc";
+	market_cap: "default" | "asc" | "desc";
 }
 
 const sortOrder = ref<TableCellsOrdination>({
-    price: "default",
-    percentage: "default",
-    volume: "default",
-    market_cap: "default",
+	price: "default",
+	percentage: "default",
+	volume: "default",
+	market_cap: "default",
 });
 
 function reorderTableCell(cell: keyof TableCellsOrdination, order: "default" | "asc" | "desc") {
-    if (order === "default") {
-        tableData.value = [ ...initialTableData.value ] as Stock[] | CryptoCurrency[];
-        sortOrder.value[ cell ] = order;
-        return;
-    }
-    let cellToReorder: keyof TableCellsOrdination | "current_price" | "price_change_24h" | "total_volume" | "close" | "change" = cell;
+	if (order === "default") {
+		tableData.value = [...initialTableData.value] as Stock[] | CryptoCurrency[];
+		sortOrder.value[cell] = order;
+		return;
+	}
+	let cellToReorder:
+		| keyof TableCellsOrdination
+		| "current_price"
+		| "price_change_percentage_24h"
+		| "total_volume"
+		| "close"
+		| "change" = cell;
 
-    sortOrder.value = {
-        price: "default",
-        percentage: "default",
-        volume: "default",
-        market_cap: "default",
-    };
+	sortOrder.value = {
+		price: "default",
+		percentage: "default",
+		volume: "default",
+		market_cap: "default",
+	};
 
-    sortOrder.value[ cell ] = order;
+	sortOrder.value[cell] = order;
 
-    if (cell === "price" && dataType.value === "cryptos") {
-        cellToReorder = "current_price";
-    } else if (cell === "price" && dataType.value === "stocks") {
-        cellToReorder = "close";
-    }
+	if (cell === "price" && dataType.value === "cryptos") {
+		cellToReorder = "current_price";
+	} else if (cell === "price" && dataType.value === "stocks") {
+		cellToReorder = "close";
+	}
 
-    if (cell === "percentage" && dataType.value === "cryptos") {
-        cellToReorder = "price_change_24h"
-    } else if (cell === "percentage" && dataType.value === "stocks") {
-        cellToReorder = "change";
-    }
+	if (cell === "percentage" && dataType.value === "cryptos") {
+		cellToReorder = "price_change_percentage_24h";
+	} else if (cell === "percentage" && dataType.value === "stocks") {
+		cellToReorder = "change";
+	}
 
-    if (cell === "volume" && dataType.value === "cryptos") {
-        cellToReorder = "total_volume";
-    }
+	if (cell === "volume" && dataType.value === "cryptos") {
+		cellToReorder = "total_volume";
+	}
 
-    tableData.value.sort((a, b) => {
-        const aValue = a[ cellToReorder as keyof typeof a ];
-        const bValue = b[ cellToReorder as keyof typeof b ];
+	tableData.value.sort((a, b) => {
+		const aValue = a[cellToReorder as keyof typeof a];
+		const bValue = b[cellToReorder as keyof typeof b];
 
-        if (order === "asc") {
-            return (aValue as number) - (bValue as number);
-        }
-        return (bValue as number) - (aValue as number);
-    });
+		if (order === "asc") {
+			return (aValue as number) - (bValue as number);
+		}
+		return (bValue as number) - (aValue as number);
+	});
 }
-
-const dataType = ref<"cryptos" | "stocks">(
-    (localStorage.getItem("dataType") as "cryptos" | "stocks" | null) ?? "stocks",
-);
-
-async function dataTypeLoader(type: "cryptos" | "stocks") {
-    if (type === "cryptos") {
-        await listCryptoCurrencies(12, cryptoStart.value);
-    } else {
-        await listStocks(12, stocksPage.value);
-    }
-
-    localStorage.setItem("dataType", type);
-}
-
-async function loadMoreDatas(type: "cryptos" | "stocks") {
-    isLoadingMore.value = true;
-
-    if (type === "cryptos") {
-        cryptoStart.value += 12;
-    } else {
-        stocksPage.value++;
-    }
-
-    try {
-        await dataTypeLoader(type);
-    } catch (err) {
-        console.error(err);
-        error.value = true;
-    }
-
-    isLoadingMore.value = false;
-}
-
-onMounted(async () => {
-    isLoading.value = true;
-    const localDataType: "cryptos" | "stocks" | null = localStorage.getItem("dataType") as
-        | "cryptos"
-        | "stocks"
-        | null;
-    const useType = localDataType ?? dataType.value;
-    if (
-        (useType === "cryptos" && cryptoStore.cryptoCurrencies.length === 0) ||
-        (useType === "stocks" && stocksStore.stocksCurrencies.length === 0)
-    ) {
-        try {
-            await dataTypeLoader(useType);
-        } catch (err) {
-            console.error(err);
-            error.value = true;
-        }
-    }
-    initialTableData.value = useType === "cryptos" ? [ ...cryptoStore.cryptoCurrencies ] : [ ...stocksStore.stocksCurrencies ];
-    tableData.value = useType === "cryptos" ? [ ...cryptoStore.cryptoCurrencies ] : [ ...stocksStore.stocksCurrencies ];
-    isLoading.value = false;
-});
 
 watch(dataType, async (newVal) => {
-    sortOrder.value = {
-        price: "default",
-        percentage: "default",
-        volume: "default",
-        market_cap: "default",
-    };
+	sortOrder.value = {
+		price: "default",
+		percentage: "default",
+		volume: "default",
+		market_cap: "default",
+	};
 
-    if (
-        (newVal === "cryptos" && cryptoStore.cryptoCurrencies.length === 0) ||
-        (newVal === "stocks" && stocksStore.stocksCurrencies.length === 0)
-    ) {
-        isLoading.value = true;
-        await dataTypeLoader(newVal);
-        isLoading.value = false;
-    }
+	if (newVal === "cryptos") {
+		if (cryptoCurrencies.length === 0) {
+			await refetchCryptos();
+		}
+		initialTableData.value = cryptosData.value?.pages.flat() ?? [];
+		tableData.value = cryptosData.value?.pages.flat() ?? [];
+	} else {
+		if (stocksCurrencies.length === 0) {
+			await refetchStocks();
+		}
+		initialTableData.value = stocksData.value?.pages.flat() ?? [];
+		tableData.value = stocksData.value?.pages.flat() ?? [];
+	}
 
-    initialTableData.value = newVal === "cryptos" ? [ ...cryptoStore.cryptoCurrencies ] : [ ...stocksStore.stocksCurrencies ];
-    tableData.value = newVal === "cryptos" ? [ ...cryptoStore.cryptoCurrencies ] : [ ...stocksStore.stocksCurrencies ];
+	localStorage.setItem("dataType", newVal);
+});
 
-    localStorage.setItem("dataType", newVal);
+watch([stocksData, cryptosData], ([newStocksData, newCryptosData]) => {
+	if (dataType.value === "cryptos") {
+		initialTableData.value = newCryptosData?.pages.flat() ?? [];
+		tableData.value = newCryptosData?.pages.flat() ?? [];
+	} else {
+		initialTableData.value = newStocksData?.pages.flat() ?? [];
+		tableData.value = newStocksData?.pages.flat() ?? [];
+	}
+});
+
+onMounted(() => {
+	if (dataType.value === "cryptos") {
+		tableData.value = cryptoCurrencies;
+	} else {
+		tableData.value = stocksCurrencies;
+	}
 });
 </script>
 
@@ -177,7 +176,7 @@ watch(dataType, async (newVal) => {
             <span v-translate class="text-sm">Tipo de Dado</span>
             <DropdownMenu>
                 <DropdownMenuTrigger as-child>
-                    <Button v-translate variant="outline" :disabled="isLoading">
+                    <Button v-translate variant="outline" :disabled="isLoadingCryptos || isLoadingStocks">
                         Selecione
                     </Button>
                 </DropdownMenuTrigger>
@@ -214,7 +213,7 @@ watch(dataType, async (newVal) => {
             </DropdownMenu>
         </li>
     </ul>
-    <Table v-if="!isLoading">
+    <Table v-if="!isLoadingCryptos && !isLoadingStocks">
         <TableHeader>
             <TableRow>
                 <TableHead>
@@ -300,7 +299,7 @@ watch(dataType, async (newVal) => {
                     {{ data.price_change_percentage_24h > 0 ? "+" : "" }}{{
                         numberFormatter(data.price_change_percentage_24h) }}%
                 </TableCell>
-                <TableCell>{{ numberFormatter(data.circulating_supply) }}</TableCell>
+                <TableCell>{{ numberFormatter(data.total_volume) }}</TableCell>
                 <TableCell>{{ numberFormatter(data.market_cap) }}</TableCell>
             </TableRow>
         </TableBody>
@@ -324,7 +323,8 @@ watch(dataType, async (newVal) => {
         </TableBody>
     </Table>
     <HomeDatasTableSkeleton v-else />
-    <Button class="-mt-4" @click="loadMoreDatas(dataType)" :disabled="isLoadingMore || isLoading">
-        {{ isLoadingMore ? "Carregando..." : "Ver mais" }}
+    <Button class="-mt-4" @click="dataType === 'cryptos' ? fetchNextCryptosPage() : fetchNextStocksPage()"
+        :disabled="isFetchingNextStocksPage || isFetchingNextCryptosPage || isLoadingCryptos || isLoadingStocks">
+        {{ isFetchingNextStocksPage || isFetchingNextCryptosPage ? "Carregando..." : "Ver mais" }}
     </Button>
 </template>

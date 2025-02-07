@@ -26,6 +26,7 @@
 	},
 	"dependencies": {
 		"@radix-icons/vue": "^1.0.0",
+		"@tanstack/vue-query": "^5.66.0",
 		"@unovis/ts": "^1.5.0",
 		"@unovis/vue": "^1.5.0",
 		"@vueuse/core": "^11.3.0",

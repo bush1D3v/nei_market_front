@@ -2,21 +2,21 @@
 import Image from "@/tags/Image.vue";
 import RouterLink from "@/tags/RouterLink.vue";
 import numberFormatter from "@/utils/numberFormatter";
-import type { TrendingCryptoCurrency } from "@/types/CoinGecko/TrendingCryptoCurrency";
-import type { Stock } from "@/types/BrapiDev/Stock";
-import type { New } from "@/types/Finnhub/New";
+import type {TrendingCryptoCurrency} from "@/types/CoinGecko/TrendingCryptoCurrency";
+import type {Stock} from "@/types/BrapiDev/Stock";
+import type {New} from "@/types/Finnhub/New";
 import Link from "@/tags/Link.vue";
 import Tooltip from "@/components/Tooltip.vue";
-import { ChevronUpIcon, ChevronDownIcon, QuestionMarkCircledIcon } from "@radix-icons/vue";
+import {ChevronUpIcon, ChevronDownIcon, QuestionMarkCircledIcon} from "@radix-icons/vue";
 
 interface Props {
-    icon: string;
-    tableTitle: string;
-    redirectTo: "/cryptos" | "/news" | "/stocks";
-    tooltipText: string;
-    coins?: TrendingCryptoCurrency[];
-    stocks?: Stock[];
-    news?: New[];
+	icon: string;
+	tableTitle: string;
+	redirectTo: "/cryptos" | "/news" | "/stocks";
+	tooltipText: string;
+	coins?: TrendingCryptoCurrency[];
+	stocks?: Stock[];
+	news?: New[];
 }
 
 const props = defineProps<Props>();

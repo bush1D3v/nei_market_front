@@ -77,7 +77,7 @@ export async function detailCrypto(slug: string): Promise<CryptoCompleted | unde
 		if (cryptoDescriptionData?.categories) {
 			const categoriesString = cryptoDescriptionData.categories.join(" | ");
 			const translatedCategoriesString = await translate(categoriesString);
-			cryptoDescriptionData.categories = translatedCategoriesString.split(" | ");
+			cryptoDescriptionData.categories = translatedCategoriesString;
 		}
 
 		return {

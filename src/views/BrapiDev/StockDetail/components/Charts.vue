@@ -22,37 +22,41 @@ import {ref} from "vue";
 
 type DataType = "line" | "bar" | "area";
 interface Props {
-	crypto: string;
+	ticker: string;
 	data: {
-		treatedPriceData: ChartData[];
-		treatedMarketData: ChartData[];
-		treatedVolumeData: ChartData[];
+		treatedMaximumMinimum: ChartData[];
+		treatedOpeningClosing: ChartData[];
+		treatedVolume: ChartData[];
 	};
 	isLoading: boolean;
 }
 
 function setDatas(
-	localStorageName: "cryptoPrice" | "cryptoMarket" | "cryptoVolume",
+	localStorageName: "stockMaximumMinimus" | "stockOpeningClosing" | "stockVolume",
 	type: "line" | "bar" | "area",
 ): void {
 	localStorage.setItem(localStorageName, type);
 	switch (localStorageName) {
-		case "cryptoPrice":
-			cryptoPrice.value = type;
+		case "stockMaximumMinimus":
+			stockMaximumMinimus.value = type;
 			break;
-		case "cryptoMarket":
-			cryptoMarket.value = type;
+		case "stockOpeningClosing":
+			stockOpeningClosing.value = type;
 			break;
-		case "cryptoVolume":
-			cryptoVolume.value = type;
+		case "stockVolume":
+			stockVolume.value = type;
 			break;
 	}
 }
 
 const props = defineProps<Props>();
-const cryptoPrice = ref<DataType>((localStorage.getItem("cryptoPrice") as DataType) || "bar");
-const cryptoMarket = ref<DataType>((localStorage.getItem("cryptoMarket") as DataType) || "area");
-const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as DataType) || "line");
+const stockMaximumMinimus = ref<DataType>(
+	(localStorage.getItem("stockMaximumMinimus") as DataType) || "bar",
+);
+const stockOpeningClosing = ref<DataType>(
+	(localStorage.getItem("stockOpeningClosing") as DataType) || "area",
+);
+const stockVolume = ref<DataType>((localStorage.getItem("stockVolume") as DataType) || "line");
 </script>
 
 <template>
@@ -75,7 +79,7 @@ const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as Data
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
-                                <DropdownMenuItem @click="setDatas('cryptoPrice', 'line')"
+                                <DropdownMenuItem @click="setDatas('stockMaximumMinimus', 'line')"
                                     class="cursor-pointer flex justify-between items-center">
                                     <div class="flex gap-2 items-center">
                                         <ChartLine class="w-5 h-5" />
@@ -83,9 +87,9 @@ const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as Data
                                             Linha
                                         </span>
                                     </div>
-                                    <CheckIcon v-if="cryptoPrice === 'line'" />
+                                    <CheckIcon v-if="stockMaximumMinimus === 'line'" />
                                 </DropdownMenuItem>
-                                <DropdownMenuItem @click="setDatas('cryptoPrice', 'area')"
+                                <DropdownMenuItem @click="setDatas('stockMaximumMinimus', 'area')"
                                     class="cursor-pointer flex justify-between items-center">
                                     <div class="flex gap-2 items-center">
                                         <ChartArea class="w-5 h-5" />
@@ -93,9 +97,9 @@ const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as Data
                                             Área
                                         </span>
                                     </div>
-                                    <CheckIcon v-if="cryptoPrice === 'area'" />
+                                    <CheckIcon v-if="stockMaximumMinimus === 'area'" />
                                 </DropdownMenuItem>
-                                <DropdownMenuItem @click="setDatas('cryptoPrice', 'bar')"
+                                <DropdownMenuItem @click="setDatas('stockMaximumMinimus', 'bar')"
                                     class="cursor-pointer flex justify-between items-center">
                                     <div class="flex gap-2 items-center">
                                         <ChartColumn class="w-5 h-5" />
@@ -103,27 +107,27 @@ const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as Data
                                             Barra
                                         </span>
                                     </div>
-                                    <CheckIcon v-if="cryptoPrice === 'bar'" />
+                                    <CheckIcon v-if="stockMaximumMinimus === 'bar'" />
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <h2 class="mx-auto" v-translate>Preço</h2>
+                <h2 class="mx-auto" v-translate>Valores Máximo e Mínimo do Dia</h2>
             </div>
-            <div v-if="cryptoPrice === 'bar'">
-                <BarChart v-if="!props.isLoading" :title="props.crypto" :data="props.data.treatedPriceData"
-                    type="crypto" :price="true" />
+            <div v-if="stockMaximumMinimus === 'bar'">
+                <BarChart v-if="!props.isLoading" :title="ticker" :data="props.data.treatedMaximumMinimum" type="stock"
+                    :price="true" />
                 <BarChartSkeleton v-else />
             </div>
-            <div v-else-if="cryptoPrice === 'area'">
-                <AreaChart v-if="!props.isLoading" :title="props.crypto" :data="props.data.treatedPriceData"
-                    type="crypto" :price="true" />
+            <div v-else-if="stockMaximumMinimus === 'area'">
+                <AreaChart v-if="!props.isLoading" :title="ticker" :data="props.data.treatedMaximumMinimum" type="stock"
+                    :price="true" />
                 <AreaChartSkeleton v-else />
             </div>
-            <div v-else-if="cryptoPrice === 'line'">
-                <LineChart v-if="!props.isLoading" :title="props.crypto" :data="props.data.treatedPriceData"
-                    type="crypto" :price="true" />
+            <div v-else-if="stockMaximumMinimus === 'line'">
+                <LineChart v-if="!props.isLoading" :title="ticker" :data="props.data.treatedMaximumMinimum" type="stock"
+                    :price="true" />
                 <LineChartSkeleton v-else />
             </div>
         </li>
@@ -145,7 +149,7 @@ const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as Data
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
-                                <DropdownMenuItem @click="setDatas('cryptoMarket', 'line')"
+                                <DropdownMenuItem @click="setDatas('stockOpeningClosing', 'line')"
                                     class="cursor-pointer flex justify-between items-center">
                                     <div class="flex gap-2 items-center">
                                         <ChartLine class="w-5 h-5" />
@@ -153,17 +157,17 @@ const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as Data
                                             Linha
                                         </span>
                                     </div>
-                                    <CheckIcon v-if="cryptoMarket === 'line'" />
+                                    <CheckIcon v-if="stockOpeningClosing === 'line'" />
                                 </DropdownMenuItem>
-                                <DropdownMenuItem @click="setDatas('cryptoMarket', 'area')"
+                                <DropdownMenuItem @click="setDatas('stockOpeningClosing', 'area')"
                                     class="cursor-pointer flex justify-between items-center">
                                     <div class="flex gap-2 items-center">
                                         <ChartArea class="w-5 h-5" />
                                         Área
                                     </div>
-                                    <CheckIcon v-if="cryptoMarket === 'area'" />
+                                    <CheckIcon v-if="stockOpeningClosing === 'area'" />
                                 </DropdownMenuItem>
-                                <DropdownMenuItem @click="setDatas('cryptoMarket', 'bar')"
+                                <DropdownMenuItem @click="setDatas('stockOpeningClosing', 'bar')"
                                     class="cursor-pointer flex justify-between items-center">
                                     <div class="flex gap-2 items-center">
                                         <ChartColumn class="w-5 h-5" />
@@ -171,27 +175,27 @@ const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as Data
                                             Barra
                                         </span>
                                     </div>
-                                    <CheckIcon v-if="cryptoMarket === 'bar'" />
+                                    <CheckIcon v-if="stockOpeningClosing === 'bar'" />
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <h2 class="mx-auto" v-translate>Capitalização de Mercado</h2>
+                <h2 class="mx-auto" v-translate>Preço de Abertura e Fechamento</h2>
             </div>
-            <div v-if="cryptoMarket === 'bar'">
-                <BarChart v-if="!props.isLoading" :title="props.crypto" :data="props.data.treatedMarketData"
-                    type="crypto" />
+            <div v-if="stockOpeningClosing === 'bar'">
+                <BarChart v-if="!props.isLoading" :title="ticker" :data="props.data.treatedOpeningClosing" type="stock"
+                    :price="true" />
                 <BarChartSkeleton v-else />
             </div>
-            <div v-else-if="cryptoMarket === 'area'">
-                <AreaChart v-if="!props.isLoading" :title="props.crypto" :data="props.data.treatedMarketData"
-                    type="crypto" />
+            <div v-else-if="stockOpeningClosing === 'area'">
+                <AreaChart v-if="!props.isLoading" :title="ticker" :data="props.data.treatedOpeningClosing" type="stock"
+                    :price="true" />
                 <AreaChartSkeleton v-else />
             </div>
-            <div v-else-if="cryptoMarket === 'line'">
-                <LineChart v-if="!props.isLoading" :title="props.crypto" :data="props.data.treatedMarketData"
-                    type="crypto" />
+            <div v-else-if="stockOpeningClosing === 'line'">
+                <LineChart v-if="!props.isLoading" :title="ticker" :data="props.data.treatedOpeningClosing" type="stock"
+                    :price="true" />
                 <LineChartSkeleton v-else />
             </div>
         </li>
@@ -213,7 +217,7 @@ const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as Data
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
-                                <DropdownMenuItem @click="setDatas('cryptoVolume', 'line')"
+                                <DropdownMenuItem @click="setDatas('stockVolume', 'line')"
                                     class="cursor-pointer flex justify-between items-center">
                                     <div class="flex gap-2 items-center">
                                         <ChartLine class="w-5 h-5" />
@@ -221,9 +225,9 @@ const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as Data
                                             Linha
                                         </span>
                                     </div>
-                                    <CheckIcon v-if="cryptoVolume === 'line'" />
+                                    <CheckIcon v-if="stockVolume === 'line'" />
                                 </DropdownMenuItem>
-                                <DropdownMenuItem @click="setDatas('cryptoVolume', 'area')"
+                                <DropdownMenuItem @click="setDatas('stockVolume', 'area')"
                                     class="cursor-pointer flex justify-between items-center">
                                     <div class="flex gap-2 items-center">
                                         <ChartArea class="w-5 h-5" />
@@ -231,9 +235,9 @@ const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as Data
                                             Área
                                         </span>
                                     </div>
-                                    <CheckIcon v-if="cryptoVolume === 'area'" />
+                                    <CheckIcon v-if="stockVolume === 'area'" />
                                 </DropdownMenuItem>
-                                <DropdownMenuItem @click="setDatas('cryptoVolume', 'bar')"
+                                <DropdownMenuItem @click="setDatas('stockVolume', 'bar')"
                                     class="cursor-pointer flex justify-between items-center">
                                     <div class="flex gap-2 items-center">
                                         <ChartColumn class="w-5 h-5" />
@@ -241,7 +245,7 @@ const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as Data
                                             Barra
                                         </span>
                                     </div>
-                                    <CheckIcon v-if="cryptoVolume === 'bar'" />
+                                    <CheckIcon v-if="stockVolume === 'bar'" />
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
@@ -249,19 +253,16 @@ const cryptoVolume = ref<DataType>((localStorage.getItem("cryptoVolume") as Data
                 </div>
                 <h2 class="mx-auto" v-translate>Volume</h2>
             </div>
-            <div v-if="cryptoVolume === 'bar'">
-                <BarChart v-if="!props.isLoading" :title="props.crypto" :data="props.data.treatedVolumeData"
-                    type="crypto" />
+            <div v-if="stockVolume === 'bar'">
+                <BarChart v-if="!props.isLoading" :title="ticker" :data="props.data.treatedVolume" type="stock" />
                 <BarChartSkeleton v-else />
             </div>
-            <div v-else-if="cryptoVolume === 'area'">
-                <AreaChart v-if="!props.isLoading" :title="props.crypto" :data="props.data.treatedVolumeData"
-                    type="crypto" />
+            <div v-else-if="stockVolume === 'area'">
+                <AreaChart v-if="!props.isLoading" :title="ticker" :data="props.data.treatedVolume" type="stock" />
                 <AreaChartSkeleton v-else />
             </div>
-            <div v-else-if="cryptoVolume === 'line'">
-                <LineChart v-if="!props.isLoading" :title="props.crypto" :data="props.data.treatedVolumeData"
-                    type="crypto" />
+            <div v-else-if="stockVolume === 'line'">
+                <LineChart v-if="!props.isLoading" :title="ticker" :data="props.data.treatedVolume" type="stock" />
                 <LineChartSkeleton v-else />
             </div>
         </li>

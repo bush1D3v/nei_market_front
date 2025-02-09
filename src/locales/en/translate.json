@@ -460,5 +460,10 @@
 	"Escolha um Tipo de Gráfico": "Choose a Chart Type",
 	"Linha": "Line",
 	"Área": "Area",
-	"Barra": "Bar"
+	"Barra": "Bar",
+	"Abertura": "Opening",
+	"Fechamento": "Closing",
+	"Máximo": "Maximum",
+	"Mínimo": "Minimum",
+	"Capitalização": "Market Cap"
 }

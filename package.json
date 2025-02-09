@@ -29,7 +29,7 @@
 		"@tanstack/vue-query": "^5.66.0",
 		"@unovis/ts": "^1.5.0",
 		"@unovis/vue": "^1.5.0",
-		"@vueuse/core": "^11.3.0",
+		"@vueuse/core": "^12.5.0",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"i18next": "^23.16.8",

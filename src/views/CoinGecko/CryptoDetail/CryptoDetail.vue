@@ -2,96 +2,96 @@
 import ArticleSkeleton from "@/components/Skeletons/components/views/CoinGecko/CryptoDetail/ArticleDescription.vue";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import InternalServerError from "@/views/Exceptions/InternalServerError.vue";
-import { useRoute } from "vue-router";
-import { useCryptoCurrencyStore } from "@/stores/useCryptoCurrencyStore";
-import { detailCrypto } from "@/services/CoinGecko";
-import type { CryptoGraphDetail, CryptoCompleted } from "@/types/CoinGecko/CryptoDetail";
-import type { ChartData } from "@/components/Chart/types/ChartData";
+import {useRoute} from "vue-router";
+import {useCryptoCurrencyStore} from "@/stores/useCryptoCurrencyStore";
+import {detailCrypto} from "@/services/CoinGecko";
+import type {CryptoGraphDetail, CryptoCompleted} from "@/types/CoinGecko/CryptoDetail";
+import type {ChartData} from "@/components/Chart/types/ChartData";
 import Image from "@/tags/Image.vue";
 import LinksList from "./components/LinksList.vue";
 import ValuesList from "./components/ValuesList.vue";
 import Charts from "./components/Charts.vue";
-import { t } from "i18next";
-import { useQuery } from "@tanstack/vue-query";
+import {t} from "i18next";
+import {useQuery} from "@tanstack/vue-query";
 
-const { params } = useRoute();
+const {params} = useRoute();
 const crypto = String(params.crypto);
 document.title = `${capitalizeFirstLetter(crypto)} | NEI Market Analytics`;
 const cryptoCurrencyStore = useCryptoCurrencyStore();
 
-const { error, isLoading, data } = useQuery({
-    queryKey: [ "crypto", crypto ],
-    queryFn: async () => {
-        const currency = (await detailCrypto(crypto)) as CryptoCompleted;
-        const treatedPriceData = mapToTreatedPriceData(currency);
-        const treatedVolumeData = mapToTreatedVolumeData(currency);
-        const treatedMarketData = mapToTreatedMarketData(currency);
+const {error, isLoading, data} = useQuery({
+	queryKey: ["crypto", crypto],
+	queryFn: async () => {
+		const currency = (await detailCrypto(crypto)) as CryptoCompleted;
+		const treatedPriceData = mapToTreatedPriceData(currency);
+		const treatedVolumeData = mapToTreatedVolumeData(currency);
+		const treatedMarketData = mapToTreatedMarketData(currency);
 
-        return {
-            crypto: currency.description,
-            treatedPriceData,
-            treatedVolumeData,
-            treatedMarketData,
-        };
-    },
-    enabled: !cryptoCurrencyStore.getCryptoDetail(crypto),
+		return {
+			crypto: currency.description,
+			treatedPriceData,
+			treatedVolumeData,
+			treatedMarketData,
+		};
+	},
+	enabled: !cryptoCurrencyStore.getCryptoDetail(crypto),
 });
 
 function mapToTreatedPriceData(detailedCrypto: CryptoGraphDetail): ChartData[] {
-    const locale = navigator.language;
-    return detailedCrypto.prices.map((data) => ({
-        dynamicParams: [ "Price" ],
-        chartData: [ data[ 1 ] ],
-        name: capitalizeFirstLetter(
-            new Date(data[ 0 ])
-                .toLocaleString(locale, {
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                })
-                .replace(",", " -"),
-        ),
-    }));
+	const locale = navigator.language;
+	return detailedCrypto.prices.map((data) => ({
+		dynamicParams: [t("Preço")],
+		chartData: [data[1]],
+		name: capitalizeFirstLetter(
+			new Date(data[0])
+				.toLocaleString(locale, {
+					month: "2-digit",
+					day: "2-digit",
+					hour: "2-digit",
+					minute: "2-digit",
+					second: "2-digit",
+				})
+				.replace(",", " -"),
+		),
+	}));
 }
 
 function mapToTreatedVolumeData(detailedCrypto: CryptoGraphDetail): ChartData[] {
-    const locale = navigator.language;
-    return detailedCrypto.total_volumes.map((data) => ({
-        dynamicParams: [ "Volume" ],
-        chartData: [ data[ 1 ] ],
-        name: capitalizeFirstLetter(
-            new Date(data[ 0 ])
-                .toLocaleString(locale, {
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                })
-                .replace(",", " -"),
-        ),
-    }));
+	const locale = navigator.language;
+	return detailedCrypto.total_volumes.map((data) => ({
+		dynamicParams: [t("Volume")],
+		chartData: [data[1]],
+		name: capitalizeFirstLetter(
+			new Date(data[0])
+				.toLocaleString(locale, {
+					month: "2-digit",
+					day: "2-digit",
+					hour: "2-digit",
+					minute: "2-digit",
+					second: "2-digit",
+				})
+				.replace(",", " -"),
+		),
+	}));
 }
 
 function mapToTreatedMarketData(detailedCrypto: CryptoGraphDetail): ChartData[] {
-    const locale = navigator.language;
-    return detailedCrypto.market_caps.map((data) => ({
-        dynamicParams: [ "Market" ],
-        chartData: [ data[ 1 ] ],
-        name: capitalizeFirstLetter(
-            new Date(data[ 0 ])
-                .toLocaleString(locale, {
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                })
-                .replace(",", " -"),
-        ),
-    }));
+	const locale = navigator.language;
+	return detailedCrypto.market_caps.map((data) => ({
+		dynamicParams: [t("Capitalização")],
+		chartData: [data[1]],
+		name: capitalizeFirstLetter(
+			new Date(data[0])
+				.toLocaleString(locale, {
+					month: "2-digit",
+					day: "2-digit",
+					hour: "2-digit",
+					minute: "2-digit",
+					second: "2-digit",
+				})
+				.replace(",", " -"),
+		),
+	}));
 }
 </script>
 
@@ -114,10 +114,7 @@ function mapToTreatedMarketData(detailedCrypto: CryptoGraphDetail): ChartData[] 
                 v-html="data?.crypto?.description.en || t('Sem Descrição')"></p>
             <ul class="flex gap-2 items-center flex-wrap">
                 <h4 v-translate>Categorias</h4>
-                <li v-for="(item, index) in data?.crypto?.categories" :key="item">
-                    <span>{{ item }}</span>
-                    &nbsp;<span v-if="index < (data?.crypto?.categories.length || 0) - 1">|</span>
-                </li>
+                <span>{{ data?.crypto?.categories }}</span>
             </ul>
         </article>
         <ArticleSkeleton v-if="isLoading && !error" />

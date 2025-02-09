@@ -457,5 +457,10 @@
 	"Escolha um Tipo de Gráfico": "Escoja un Tipo de Gráfico",
 	"Linha": "Línea",
 	"Área": "Área",
-	"Barra": "Barra"
+	"Barra": "Barra",
+	"Abertura": "Apertura",
+	"Fechamento": "Cierre",
+	"Máximo": "Máximo",
+	"Mínimo": "Mínimo",
+	"Capitalização": "Capitalización"
 }

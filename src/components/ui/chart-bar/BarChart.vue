@@ -68,6 +68,33 @@ const VisBarComponent = computed(() => (props.type === "grouped" ? VisGroupedBar
 const selectorsBar = computed(() =>
 	props.type === "grouped" ? GroupedBar.selectors.bar : StackedBar.selectors.bar,
 );
+
+function cleanNameKey(data) {
+	return data.map((item) => {
+		const {name, ...rest} = item;
+
+		const dateTimePattern = /^\d{2}\/\d{2} - \d{2}:\d{2}:\d{2}$/;
+		const engDateTimePattern = /^\d{2}\/\d{2} - \d{2}:\d{2}:\d{2} [APM]{2}$/;
+		if (!dateTimePattern.test(name) && !engDateTimePattern.test(name)) {
+			return {...rest, name};
+		}
+
+		const [datePart] = name.split(" - ");
+		const [day, month] = datePart.split("/").map(Number);
+
+		const date = new Date(new Date().getFullYear(), month - 1, day);
+
+		const locale = navigator.language;
+		const formattedName = date.toLocaleDateString(locale, {
+			day: "2-digit",
+			month: "2-digit",
+		});
+
+		return {...rest, name: formattedName};
+	});
+}
+
+const cleanedData = cleanNameKey(props.data);
 </script>
 
 <template>
@@ -88,7 +115,7 @@ const selectorsBar = computed(() =>
                     },
                 }" />
 
-            <VisAxis v-if="showXAxis" type="x" :tick-format="xFormatter ?? ((v: number) => data[ v ]?.[ index ])"
+            <VisAxis v-if="showXAxis" type="x" :tick-format="xFormatter ?? ((v: number) => cleanedData[ v ]?.[ index ])"
                 :grid-line="false" :tick-line="false" tick-text-color="var(--text)" />
             <VisAxis v-if="showYAxis" type="y" :tick-line="false" :tick-format="yFormatter" :domain-line="false"
                 :grid-line="showGridLine" :attributes="{

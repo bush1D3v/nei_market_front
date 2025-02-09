@@ -3,7 +3,6 @@ import type {Category} from "@/types/Finnhub/Category";
 import type {New} from "@/types/Finnhub/New";
 import {bus} from "@/events/finnhubEventEmitter";
 import formatDate from "@/utils/formatDate";
-import translate from "@/utils/externalDataTranslator";
 
 /**
  * @description Handles the request to get the list of market news.
@@ -54,10 +53,6 @@ export async function listCompanyNews(symbol = "AAPL"): Promise<New[] | undefine
 		if (!response.ok) throw new Error(await response.json());
 
 		const news: New[] = await response.json();
-
-		for (let i = 0; i < 3; i++) {
-			news[i].headline = await translate(news[i].headline);
-		}
 
 		bus.emit("getMarketNews", {category: "company", news});
 

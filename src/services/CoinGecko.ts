@@ -73,24 +73,19 @@ export async function detailCrypto(slug: string): Promise<CryptoCompleted | unde
 		cryptoDescriptionData.description.en = await translate(
 			cryptoDescriptionData.description.en,
 		);
+
 		if (cryptoDescriptionData?.categories) {
-			for (let i = 0; i < cryptoDescriptionData.categories.length; i++) {
-				cryptoDescriptionData.categories[i] = await translate(
-					cryptoDescriptionData.categories[i],
-				);
-			}
+			const categoriesString = cryptoDescriptionData.categories.join(" | ");
+			const translatedCategoriesString = await translate(categoriesString);
+			cryptoDescriptionData.categories = translatedCategoriesString.split(" | ");
 		}
 
-		const crypto: CryptoCompleted = {
+		return {
 			description: cryptoDescriptionData,
 			prices: cryptoGraphData.prices,
 			market_caps: cryptoGraphData.market_caps,
 			total_volumes: cryptoGraphData.total_volumes,
 		};
-
-		bus.emit("getDetailedCrypto", {crypto, slug});
-
-		return crypto;
 	} catch (error) {
 		console.error(error);
 		throw error;

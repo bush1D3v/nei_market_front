@@ -2,9 +2,6 @@
 import Image from "@/tags/Image.vue";
 import Button from "@/components/ui/button/Button.vue";
 import numberFormatter from "@/utils/numberFormatter";
-import translate from "@/utils/externalDataTranslator";
-import {onBeforeMount, ref} from "vue";
-import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 
 export interface EntityCardProps {
 	id: string | number;
@@ -19,15 +16,6 @@ export interface EntityCardProps {
 }
 
 const props = defineProps<EntityCardProps>();
-const translatedId = ref<string | number>();
-
-onBeforeMount(async () => {
-	if (props.type !== "crypto") {
-		translatedId.value = await translate(capitalizeFirstLetter(props.id as string));
-	} else {
-		translatedId.value = props.id;
-	}
-});
 </script>
 
 <template>
@@ -41,7 +29,12 @@ onBeforeMount(async () => {
                     <p v-translate>{{ props.type === "crypto" ? "Moeda" : "Símbolo" }}</p>
                     <strong>{{ props.symbol.toUpperCase() }}</strong>
                     &nbsp;·&nbsp;<p v-translate>{{ props.type === "crypto" ? "ID" : "Tipo" }}</p>
-                    <strong class="max-w-8 md:max-w-12 line-clamp-1">{{ translatedId }}</strong>
+                    <strong v-translate v-if="props.type === 'stock'" class="max-w-8 md:max-w-12 line-clamp-1">
+                        {{ props.id }}
+                    </strong>
+                    <strong v-else class="max-w-8 md:max-w-12 line-clamp-1">
+                        {{ props.id }}
+                    </strong>
                 </div>
             </div>
         </div>

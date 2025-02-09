@@ -8,6 +8,7 @@ import type {New} from "@/types/Finnhub/New";
 import Link from "@/tags/Link.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import {ChevronUpIcon, ChevronDownIcon, QuestionMarkCircledIcon} from "@radix-icons/vue";
+import i18next from "i18next";
 
 interface Props {
 	icon: string;
@@ -43,7 +44,7 @@ const props = defineProps<Props>();
         </div>
         <hr class="h-[1px] w-full bg-gray-300" />
         <ul class="flex flex-col gap-2">
-            <ul class="flex gap-8 -mb-2" v-if="!props.news">
+            <ul class="flex gap-4 -mb-2" v-if="!props.news">
                 <li class="flex gap-2 min-w-40 max-w-40 md:min-w-60 md:max-w-60 justify-between items-end">
                     <p v-translate class="text-xs">Nome</p>
                     <p v-translate class="text-xs">Símbolo</p>
@@ -53,7 +54,7 @@ const props = defineProps<Props>();
                     <p v-translate class="text-xs">Variação 24h %</p>
                 </li>
             </ul>
-            <li v-if="props.coins" v-for="(data, i) in props.coins" :key="i">
+            <li v-if="props.coins" v-for="data in props.coins" :key="`crypto ${data.id}`">
                 <div class="li-first-container">
                     <div class="flex gap-2">
                         <Image class="rounded-full" :src="data.small" :alt="data.name + ' logo'" width="24"
@@ -75,7 +76,7 @@ const props = defineProps<Props>();
                     </span>
                 </div>
             </li>
-            <li v-if="props.stocks" v-for="(data, i) in props.stocks" :key="i">
+            <li v-else-if="props.stocks" v-for="data in props.stocks" :key="`stock ${data.stock}`">
                 <div class="li-first-container">
                     <div class="flex gap-2">
                         <Image class="rounded-full" :src="data.logo" :alt="data.name + ' logo'" width="24"
@@ -97,19 +98,20 @@ const props = defineProps<Props>();
                     </span>
                 </div>
             </li>
-            <li v-if="props.news" v-for="(data, i) in props.news" :key="i" class="flex gap-3">
+            <li v-else-if="props.news" v-for="data in props.news" :key="`new ${data.id}`" class="flex gap-3">
                 <Image :src="data.image" :alt="data.headline + ' logo'" width="82" height="47"
                     class="w-[82px] h-[47px] rounded-lg" />
                 <div class="flex flex-col max-h-14 text-left">
                     <Link :href="data.url" target="_blank" class="hover:underline">
-                    <h6 class="line-clamp-2 max-w-56 min-w-56 md:max-w-72 md:min-w-72 text-sm">
+                    <h5 class="line-clamp-2 max-w-56 min-w-56 md:max-w-72 md:min-w-72 text-sm">
                         {{ data.headline }}
-                    </h6>
+                    </h5>
                     </Link>
-                    <span class="text-xs text-dark">{{ new Date(data.datetime * 1000).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric'
-                    }) }}</span>
+                    <span class="text-xs text-dark">{{ new Date(data.datetime *
+                        1000).toLocaleDateString(i18next.language, {
+                            month: 'short',
+                            day: 'numeric'
+                        }) }}</span>
                 </div>
             </li>
         </ul>
@@ -126,7 +128,7 @@ article {
 }
 
 .li-second-container {
-    @apply flex gap-2 items-center justify-start mt-1;
+    @apply flex gap-2 items-center justify-between ml-2 mt-1 w-full;
 
     & span {
         @apply text-sm;

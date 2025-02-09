@@ -406,7 +406,7 @@
 	"Categorias": "Categorías",
 	"Categoria": "Categoría",
 	"Setor": "Sector",
-	"Indústria": "Industria",
+	"Indústrias": "Indústrias",
 	"Ranking de Capitalização de Mercado": "Ranking de Capitalización de Mercado",
 	"Moeda": "Moneda",
 	"Tipo": "Tipo",
@@ -431,6 +431,7 @@
 	"O NEI Market Analytics oferece uma plataforma abrangente para explorar e entender o mundo dos criptoativos e ações digitais, e ao utilizá-lo, você pode expandir seu conhecimento sobre o ecossistema digital, tomar decisões informadas e aproveitar melhor as oportunidades neste espaço em constante evolução.": "El NEI Market Analytics ofrece una plataforma integral para explorar y comprender el mundo de las criptomonedas y acciones digitales, y al utilizarlo, puedes expandir tu conocimiento sobre el ecosistema digital, tomar decisiones informadas y aprovechar mejor las oportunidades en este espacio en constante evolución.",
 	"Novo no Mundo Financeiro Digital? Comece aqui!": "Nuevo en el Mundo Financiero Digital? Comience aquí!",
 	"Tipo de Dado": "Tipo de Dato",
+	"Tipo de Gráfico": "Tipo de Gráfico",
 	"Escolha um Tipo de Dado": "Escoja un Tipo de Dato",
 	"Selecione": "Seleccione",
 	"Listagem das suas criptomoedas.": "Listado de sus criptomonedas.",
@@ -447,5 +448,14 @@
 	"Recomendado": "Recomendado",
 	"Notícias do nosso Blog e fontes externas": "Noticias de nuestro Blog y fuentes externas",
 	"Ações com maior variação de preço nas últimas 24 horas": "Acciones con mayor variación de precio en las últimas 24 horas",
-	"Criptomoedas mais pesquisadas pelos usuários nas últimas 24 horas": "Criptomonedas más buscadas por los usuarios en las últimas 24 horas"
+	"Criptomoedas mais pesquisadas pelos usuários nas últimas 24 horas": "Criptomonedas más buscadas por los usuarios en las últimas 24 horas",
+	"👋 Oi! Eu sou NEI Market AI, pergunte-me qualquer coisa sobre NEI Market Analytics!": "👋 ¡Hola! Soy NEI Market AI, pregúntame cualquier cosa sobre NEI Market Analytics!",
+	"stock": "Acción",
+	"fund": "Fondo",
+	"bdr": "BDR",
+	"Outros": "Otros",
+	"Escolha um Tipo de Gráfico": "Escoja un Tipo de Gráfico",
+	"Linha": "Línea",
+	"Área": "Área",
+	"Barra": "Barra"
 }

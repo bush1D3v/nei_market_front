@@ -1,176 +1,127 @@
 <script setup lang="ts">
-import AreaChart from "@/components/Chart/AreaChart.vue";
 import ArticleSkeleton from "@/components/Skeletons/components/views/CoinGecko/CryptoDetail/ArticleDescription.vue";
-import AreaChartSkeleton from "@/components/Skeletons/components/Chart/AreaChart.vue";
-import BarChart from "@/components/Chart/BarChart.vue";
-import BarChartSkeleton from "@/components/Skeletons/components/Chart/BarChart.vue";
-import LineChart from "@/components/Chart/LineChart.vue";
-import LineChartSkeleton from "@/components/Skeletons/components/Chart/LineChart.vue";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import InternalServerError from "@/views/Exceptions/InternalServerError.vue";
-import {onBeforeMount, onMounted, ref} from "vue";
-import {useRoute} from "vue-router";
-import {useCryptoCurrencyStore} from "@/stores/useCryptoCurrencyStore";
-import {detailCrypto} from "@/services/CoinGecko";
-import type {
-	CryptoGraphDetail,
-	GeneralData,
-	CryptoCompleted,
-	CryptoDataDescription,
-} from "@/types/CoinGecko/CryptoDetail";
-import type {ChartData} from "@/components/Chart/types/ChartData";
+import { useRoute } from "vue-router";
+import { useCryptoCurrencyStore } from "@/stores/useCryptoCurrencyStore";
+import { detailCrypto } from "@/services/CoinGecko";
+import type { CryptoGraphDetail, CryptoCompleted } from "@/types/CoinGecko/CryptoDetail";
+import type { ChartData } from "@/components/Chart/types/ChartData";
 import Image from "@/tags/Image.vue";
 import LinksList from "./components/LinksList.vue";
 import ValuesList from "./components/ValuesList.vue";
-import {t} from "i18next";
+import Charts from "./components/Charts.vue";
+import { t } from "i18next";
+import { useQuery } from "@tanstack/vue-query";
 
-const route = useRoute();
-const crypto = String(route.params.crypto);
+const { params } = useRoute();
+const crypto = String(params.crypto);
+document.title = `${capitalizeFirstLetter(crypto)} | NEI Market Analytics`;
 const cryptoCurrencyStore = useCryptoCurrencyStore();
-const error = ref<boolean>(false);
-const loading = ref<boolean>(true);
-const treatedLineData = ref<ChartData[]>([]);
-const treatedBarData = ref<ChartData[]>([]);
-const treatedAreaData = ref<ChartData[]>([]);
-const cryptoDetailData = ref<CryptoDataDescription>();
 
-function filterByDay(data: GeneralData[]): GeneralData[] {
-	const seenDates = new Set<string>();
-	return data.filter(([timestamp]) => {
-		const date = new Date(timestamp).toISOString().split("T")[0];
-		if (seenDates.has(date)) {
-			return false;
-		}
-		seenDates.add(date);
-		return true;
-	});
-}
+const { error, isLoading, data } = useQuery({
+    queryKey: [ "crypto", crypto ],
+    queryFn: async () => {
+        const currency = (await detailCrypto(crypto)) as CryptoCompleted;
+        const treatedPriceData = mapToTreatedPriceData(currency);
+        const treatedVolumeData = mapToTreatedVolumeData(currency);
+        const treatedMarketData = mapToTreatedMarketData(currency);
 
-async function filterCryptoDetail(cryptoDetail: CryptoCompleted): Promise<CryptoCompleted> {
-	const filteredPrices = filterByDay(cryptoDetail.prices);
-	const filteredMarketCaps = filterByDay(cryptoDetail.market_caps);
-	const filteredTotalVolumes = filterByDay(cryptoDetail.total_volumes);
-
-	cryptoDetailData.value = cryptoDetail.description;
-
-	// Gamb pra contornar o filtro que retorna 2 itens da mesma data no inicio do array
-	return {
-		prices: filteredPrices.slice(1),
-		market_caps: filteredMarketCaps.slice(1),
-		total_volumes: filteredTotalVolumes.slice(1),
-		description: cryptoDetail.description,
-	};
-}
-
-function mapToTreatedBarData(detailedCrypto: CryptoGraphDetail): ChartData[] {
-	const locale = navigator.language;
-	return detailedCrypto.prices.map((data) => ({
-		dynamicParams: ["Price"],
-		chartData: [data[1]],
-		name: capitalizeFirstLetter(
-			new Date(data[0]).toLocaleDateString(locale, {day: "numeric", month: "short"}),
-		),
-	}));
-}
-
-function mapToTreatedLineData(detailedCrypto: CryptoGraphDetail): ChartData[] {
-	const locale = navigator.language;
-	return detailedCrypto.total_volumes.map((data) => ({
-		dynamicParams: ["Volume"],
-		chartData: [data[1]],
-		name: capitalizeFirstLetter(
-			new Date(data[0]).toLocaleDateString(locale, {day: "numeric", month: "short"}),
-		),
-	}));
-}
-
-function mapToTreatedAreaData(detailedCrypto: CryptoGraphDetail): ChartData[] {
-	const locale = navigator.language;
-	return detailedCrypto.market_caps.map((data) => ({
-		dynamicParams: ["Market"],
-		chartData: [data[1]],
-		name: capitalizeFirstLetter(
-			new Date(data[0]).toLocaleDateString(locale, {day: "numeric", month: "short"}),
-		),
-	}));
-}
-
-onBeforeMount(() => {
-	document.title = `${capitalizeFirstLetter(crypto)} | NEI Market Analytics`;
+        return {
+            crypto: currency.description,
+            treatedPriceData,
+            treatedVolumeData,
+            treatedMarketData,
+        };
+    },
+    enabled: !cryptoCurrencyStore.getCryptoDetail(crypto),
 });
 
-onMounted(async () => {
-	if (!cryptoCurrencyStore.getCryptoDetail(crypto)) {
-		try {
-			await detailCrypto(crypto);
-		} catch (err) {
-			error.value = true;
-			loading.value = false;
-			return;
-		}
-	}
+function mapToTreatedPriceData(detailedCrypto: CryptoGraphDetail): ChartData[] {
+    const locale = navigator.language;
+    return detailedCrypto.prices.map((data) => ({
+        dynamicParams: [ "Price" ],
+        chartData: [ data[ 1 ] ],
+        name: capitalizeFirstLetter(
+            new Date(data[ 0 ])
+                .toLocaleString(locale, {
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                })
+                .replace(",", " -"),
+        ),
+    }));
+}
 
-	const currency = cryptoCurrencyStore.getCryptoDetail(crypto);
+function mapToTreatedVolumeData(detailedCrypto: CryptoGraphDetail): ChartData[] {
+    const locale = navigator.language;
+    return detailedCrypto.total_volumes.map((data) => ({
+        dynamicParams: [ "Volume" ],
+        chartData: [ data[ 1 ] ],
+        name: capitalizeFirstLetter(
+            new Date(data[ 0 ])
+                .toLocaleString(locale, {
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                })
+                .replace(",", " -"),
+        ),
+    }));
+}
 
-	const filteredCrypto = await filterCryptoDetail(currency as CryptoCompleted);
-
-	cryptoCurrencyStore.setCryptoDetail(crypto, filteredCrypto);
-
-	treatedLineData.value = mapToTreatedLineData(
-		cryptoCurrencyStore.getCryptoDetail(crypto) as CryptoGraphDetail,
-	);
-	treatedBarData.value = mapToTreatedBarData(
-		cryptoCurrencyStore.getCryptoDetail(crypto) as CryptoGraphDetail,
-	);
-	treatedAreaData.value = mapToTreatedAreaData(
-		cryptoCurrencyStore.getCryptoDetail(crypto) as CryptoGraphDetail,
-	);
-
-	loading.value = false;
-});
+function mapToTreatedMarketData(detailedCrypto: CryptoGraphDetail): ChartData[] {
+    const locale = navigator.language;
+    return detailedCrypto.market_caps.map((data) => ({
+        dynamicParams: [ "Market" ],
+        chartData: [ data[ 1 ] ],
+        name: capitalizeFirstLetter(
+            new Date(data[ 0 ])
+                .toLocaleString(locale, {
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                })
+                .replace(",", " -"),
+        ),
+    }));
+}
 </script>
 
 <template>
     <section class="container justify-center mb-9">
-        <article v-if="!loading && !error" class="flex flex-col gap-4">
+        <article v-if="!isLoading && !error" class="flex flex-col gap-4">
             <div class="flex flex-col items-center md:flex-row justify-between gap-4">
                 <div class="flex flex-col justify-between gap-2">
                     <div class="flex items-end gap-2">
-                        <Image :src="cryptoDetailData?.image.small || ''" :alt="cryptoDetailData?.name + ' Logo' || ''" width="50" height="50" />
-                        <h1>{{ cryptoDetailData?.name || '' }}</h1>
-                        <h2>- {{ cryptoDetailData?.symbol || '' }}</h2>
+                        <Image :src="data?.crypto?.image.small || ''" :alt="data?.crypto?.name + ' Logo' || ''"
+                            width="50" height="50" />
+                        <h1>{{ data?.crypto?.name || '' }}</h1>
+                        <h2>- {{ data?.crypto?.symbol || '' }}</h2>
                     </div>
-                    <LinksList :links="cryptoDetailData?.links" />
+                    <LinksList :links="data?.crypto?.links" />
                 </div>
-                <ValuesList :marketCapRank="cryptoDetailData?.market_cap_rank" :marketData="cryptoDetailData?.market_data" />
+                <ValuesList :marketCapRank="data?.crypto?.market_cap_rank" :marketData="data?.crypto?.market_data" />
             </div>
-            <p class="line-clamp-4 md:line-clamp-6 lg:line-clamp-none" v-html="cryptoDetailData?.description.en || t('Sem Descrição')"></p>
+            <p class="line-clamp-4 md:line-clamp-6 lg:line-clamp-none"
+                v-html="data?.crypto?.description.en || t('Sem Descrição')"></p>
             <ul class="flex gap-2 items-center flex-wrap">
                 <h4 v-translate>Categorias</h4>
-                <li v-for="(item, index) in cryptoDetailData?.categories" :key="item">
+                <li v-for="(item, index) in data?.crypto?.categories" :key="item">
                     <span>{{ item }}</span>
-                    &nbsp;<span v-if="index < (cryptoDetailData?.categories.length || 0) - 1">|</span>
+                    &nbsp;<span v-if="index < (data?.crypto?.categories.length || 0) - 1">|</span>
                 </li>
             </ul>
         </article>
-        <ArticleSkeleton v-if="loading && !error" />
-        <ul v-if="!error" class="flex flex-col gap-20 w-full text-center mt-4">
-            <li>
-                <h2 v-translate>Preço</h2>
-                <BarChart v-if="!loading && !error" :title="crypto" :data="treatedBarData" />
-                <BarChartSkeleton v-if="loading && !error" />
-            </li>
-            <li>
-                <h2 v-translate>Capitalização de Mercado</h2>
-                <AreaChart v-if="!loading && !error" :title="crypto" :data="treatedAreaData" />
-                <AreaChartSkeleton v-if="loading && !error" />
-            </li>
-            <li>
-                <h2 v-translate>Volume</h2>
-                <LineChart v-if="!loading && !error" :title="crypto" :data="treatedLineData" />
-                <LineChartSkeleton v-if="loading && !error" />
-            </li>
-        </ul>
+        <ArticleSkeleton v-if="isLoading && !error" />
+        <Charts v-if="!error" :crypto="crypto" :data="data" :isLoading="isLoading" />
         <InternalServerError v-if="error" />
     </section>
 </template>

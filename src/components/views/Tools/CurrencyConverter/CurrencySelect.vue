@@ -14,10 +14,7 @@ import {CurrencyQuotesDto} from "@/components/Dto/CurrencyQuotesDto";
 import {ref} from "vue";
 import i18next, {t} from "i18next";
 import {cn} from "@/lib/utils";
-import {listCurrencyQuotes} from "@/services/CurrencyQuotes";
 import {useCurrencyQuotesStore} from "@/stores/useCurrencyQuotesStore";
-import {onMounted} from "vue";
-import {CurrencyQuotesDtoValues} from "@/components/Dto/CurrencyQuotesDtoValues";
 import {watch} from "vue";
 import type {Rates} from "@/types/CurrencyQuotes/Rates";
 
@@ -38,20 +35,6 @@ function selectItem(currency: KeyValue) {
 		currencyQuotesStore.leftCode = currency.key as keyof Rates;
 	}
 }
-
-onMounted(async () => {
-	if (!currencyQuotesStore.currencyQuotes?.rates) {
-		const data = await listCurrencyQuotes();
-		if (!data) {
-			const currencies = {
-				table: "default",
-				rates: CurrencyQuotesDtoValues,
-				lastupdate: "2024-11-03T18:21:47.000000-03:00", // ISO 8601 date string
-			};
-			currencyQuotesStore.setCurrencyQuotes(currencies);
-		}
-	}
-});
 
 interface KeyValue {
 	key: string;
@@ -113,7 +96,7 @@ watch(
                 <CommandEmpty>{{ t("Moeda não encontrada") }}</CommandEmpty>
                 <CommandList>
                     <CommandGroup>
-                        <CommandItem v-for="currency in sortedCurrencies" :key="currency.key" :value="currency.key"
+                        <CommandItem v-for="currency in sortedCurrencies" :key="currency.key" :value="currency.value"
                             @select="selectItem(currency)" class="hover:bg-buttonBg p-1 cursor-pointer">
                             {{ t(currency.value) }}
                             <CheckIcon :class="cn(

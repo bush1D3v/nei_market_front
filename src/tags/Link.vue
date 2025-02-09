@@ -12,7 +12,7 @@ const props = defineProps<LinkProps>();
 </script>
 
 <template>
-    <a :href="props.href" :target="props.target" rel="no-referrer"
+    <a :href="props.href" :target="props.target" :rel="props.target === '_blank' ? 'noopener noreferrer' : ''"
         :class="cn('hover:opacity-50 duration-150 ease-in-out', props.class)" data-testid="Link">
         <slot />
     </a>

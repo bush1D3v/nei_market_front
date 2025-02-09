@@ -406,7 +406,7 @@
 	"Categorias": "Categorias",
 	"Categoria": "Categoria",
 	"Setor": "Setor",
-	"Indústria": "Indústria",
+	"Indústrias": "Indústrias",
 	"Ranking de Capitalização de Mercado": "Ranking de Capitalização de Mercado",
 	"Moeda": "Moeda",
 	"Tipo": "Tipo",
@@ -433,6 +433,7 @@
 	"O NEI Market Analytics oferece uma plataforma abrangente para explorar e entender o mundo dos criptoativos e ações digitais, e ao utilizá-lo, você pode expandir seu conhecimento sobre o ecossistema digital, tomar decisões informadas e aproveitar melhor as oportunidades neste espaço em constante evolução.": "O NEI Market Analytics oferece uma plataforma abrangente para explorar e entender o mundo dos criptoativos e ações digitais, e ao utilizá-lo, você pode expandir seu conhecimento sobre o ecossistema digital, tomar decisões informadas e aproveitar melhor as oportunidades neste espaço em constante evolução.",
 	"Novo no Mundo Financeiro Digital? Comece aqui!": "Novo no Mundo Financeiro Digital? Comece aqui!",
 	"Tipo de Dado": "Tipo de Dado",
+	"Tipo de Gráfico": "Tipo de Gráfico",
 	"Escolha um Tipo de Dado": "Escolha um Tipo de Dado",
 	"Selecione": "Selecione",
 	"Listagem das suas criptomoedas.": "Listagem das suas criptomoedas.",
@@ -449,5 +450,14 @@
 	"Recomendado": "Recomendado",
 	"Notícias do nosso Blog e fontes externas": "Notícias do nosso Blog e fontes externas",
 	"Ações com maior variação de preço nas últimas 24 horas": "Ações com maior variação de preço nas últimas 24 horas",
-	"Criptomoedas mais pesquisadas pelos usuários nas últimas 24 horas": "Criptomoedas mais pesquisadas pelos usuários nas últimas 24 horas"
+	"Criptomoedas mais pesquisadas pelos usuários nas últimas 24 horas": "Criptomoedas mais pesquisadas pelos usuários nas últimas 24 horas",
+	"👋 Oi! Eu sou NEI Market AI, pergunte-me qualquer coisa sobre NEI Market Analytics!": "👋 Oi! Eu sou NEI Market AI, pergunte-me qualquer coisa sobre NEI Market Analytics!",
+	"stock": "Ação",
+	"fund": "Fundo",
+	"bdr": "BDR",
+	"Outros": "Outros",
+	"Escolha um Tipo de Gráfico": "Escolha um Tipo de Gráfico",
+	"Linha": "Linha",
+	"Área": "Área",
+	"Barra": "Barra"
 }

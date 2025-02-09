@@ -20,25 +20,8 @@ export const useNewsStore = defineStore("news", () => {
 		news.value[category].push(...data);
 	}
 
-	function searchNews(search: string): New[] {
-		const allNews: New[] = [];
-		for (const category in news.value) {
-			allNews.push(...news.value[category as Category]);
-		}
-		allNews.filter((news) => news.headline.toLowerCase().includes(search.toLowerCase()));
-		if (allNews.length > 0) {
-			return allNews;
-		}
-
-		for (const category in news.value) {
-			allNews.push(...news.value[category as Category]);
-		}
-		return allNews.filter((news) => news.summary.toLowerCase().includes(search.toLowerCase()));
-	}
-
 	return {
 		news,
 		addNews,
-		searchNews,
 	};
 });

@@ -11,7 +11,7 @@ const data = dataTreat(props.data);
 </script>
 
 <template>
-    <LineChart :data="data" index="name" :categories="categories" :colors="colors" :y-formatter="(tick, i) => {
+    <LineChart :data="data" index="name" :categories="categories" :colors="colors" :y-formatter="(tick, _i) => {
         return typeof tick === 'number'
             ? numberFormatter(tick)
             : ''

@@ -12,8 +12,8 @@ import PrivacyPolicy from "@/views/Policies/PrivacyPolicy.vue";
 import News from "@/views/Finnhub/News.vue";
 import CurrencyConverter from "@/views/Tools/CurrencyConverter.vue";
 
-const VITE_HOST = import.meta.env.VITE_HOST as string;
-const VITE_PORT = import.meta.env.VITE_PORT as string;
+const VITE_HOST = import.meta.env.VITE_HOST;
+const VITE_PORT = import.meta.env.VITE_PORT;
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),

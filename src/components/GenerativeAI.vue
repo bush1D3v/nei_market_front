@@ -9,7 +9,7 @@ import LikeImage from "@/assets/images/like.png";
 import DislikeImage from "@/assets/images/dislike.png";
 import useToastNotification from "@/notification/toast";
 import {v4 as uuidv4} from "uuid";
-import {ref, nextTick, onMounted} from "vue";
+import {ref, nextTick} from "vue";
 import {
 	Bot,
 	User,
@@ -21,8 +21,13 @@ import {
 	ThumbsUp,
 } from "lucide-vue-next";
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible";
-import translate from "@/utils/externalDataTranslator";
 import {t} from "i18next";
+// import { useQuery } from "@tanstack/vue-query";
+
+// const { refetch } = useQuery({
+//     queryKey: [ 'generateContent' ],
+//     queryFn: async () => generateContent(),
+// });
 
 interface Message {
 	text: string;
@@ -118,6 +123,7 @@ async function sendMessage(resendMessage?: boolean) {
 					? false
 					: undefined,
 		};
+
 		await generateContent(data);
 	} catch (error) {
 		console.error(error);
@@ -167,16 +173,12 @@ socket.on("error", (data) => {
 		console.error(data.error);
 	}
 });
-
-onMounted(async () => {
-	messages.value[0].text = await translate(messages.value[0].text, "pt");
-});
 </script>
 
 <template>
     <Collapsible v-model:open="isOpen" class="fixed right-0 lg:right-14 bottom-32 lg:bottom-14 z-50">
         <CollapsibleTrigger as-child class="absolute right-4 lg:-right-10 -bottom-10">
-            <Button :title="isOpen ? 'Fechar chat' : 'Abrir chat'" variant="default" class="w-12 h-12 p-2 rounded-full">
+            <Button :title="isOpen ? 'Open chat' : 'Close chat'" variant="default" class="w-12 h-12 p-2 rounded-full">
                 <BotMessageSquare :size="50" />
             </Button>
         </CollapsibleTrigger>
@@ -188,7 +190,7 @@ onMounted(async () => {
                             height="40" />
                         <h6>NEI Market AI</h6>
                     </div>
-                    <button title="Recarregar chat" @click="refresh" :disabled="messages.length === 1 || loading"
+                    <button title="Refresh chat" @click="refresh" :disabled="messages.length === 1 || loading"
                         class="disabled:opacity-50 hover:opacity-50 duration-150 ease-in-out">
                         <RefreshCw :size="20" :stroke-width="3" />
                     </button>
@@ -198,11 +200,12 @@ onMounted(async () => {
                         <div :class="[ 'chat-message', message.sender ]" class="rounded-full relative">
                             <Bot v-if="message.sender === 'ai'" :class="[ 'chat-icon', message.sender ]" />
                             <User v-if="message.sender === 'user'" :class="[ 'chat-icon', message.sender ]" />
-                            <span class="text-white">{{ message.text }}</span>
+                            <span v-if="!message.first" class="text-white">{{ message.text }}</span>
+                            <span v-else v-translate class="text-white">{{ message.text }}</span>
                         </div>
                         <div v-if="message.sender === 'ai' && !message.first"
                             class="chat-actions ml-7 -mt-1 flex gap-3">
-                            <button title="Copiar" @click="copyToClipboard(message.text)">
+                            <button title="Copy" @click="copyToClipboard(message.text)">
                                 <Copy :size="16" />
                             </button>
                             <button title="Like" @click="toggleLike(message)">
@@ -214,7 +217,8 @@ onMounted(async () => {
                                 <Image :src="DislikeImage" alt="Dislike" width="16" height="16" class="dark:invert"
                                     v-else />
                             </button>
-                            <button title="Recarregar" v-if="index === messages.length - 1" @click="sendMessage(true)">
+                            <button title="Refresh message" v-if="index === messages.length - 1"
+                                @click="sendMessage(true)">
                                 <RefreshCw :size="16" />
                             </button>
                         </div>

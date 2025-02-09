@@ -410,7 +410,7 @@
 	"Categorias": "Categories",
 	"Categoria": "Category",
 	"Setor": "Sector",
-	"Indústria": "Industry",
+	"Indústrias": "Industries",
 	"Moeda": "Currency",
 	"Tipo": "Type",
 	"ID": "ID",
@@ -434,6 +434,7 @@
 	"O NEI Market Analytics oferece uma plataforma abrangente para explorar e entender o mundo dos criptoativos e ações digitais, e ao utilizá-lo, você pode expandir seu conhecimento sobre o ecossistema digital, tomar decisões informadas e aproveitar melhor as oportunidades neste espaço em constante evolução.": "The NEI Market Analytics offers a comprehensive platform to explore and understand the world of cryptocurrencies and digital stocks, and by using it, you can expand your knowledge about the digital ecosystem, make informed decisions and take advantage of the opportunities in this constantly evolving space.",
 	"Novo no Mundo Financeiro Digital? Comece aqui!": "New in the Digital Financial World? Start here!",
 	"Tipo de Dado": "Data Type",
+	"Tipo de Gráfico": "Chart Type",
 	"Escolha um Tipo de Dado": "Choose a Data Type",
 	"Selecione": "Select",
 	"Listagem das suas criptomoedas.": "List of your cryptocurrencies.",
@@ -450,5 +451,14 @@
 	"Recomendado": "Recommended",
 	"Notícias do nosso Blog e fontes externas": "News from our Blog and external sources",
 	"Ações com maior variação de preço nas últimas 24 horas": "Stocks with the highest price variation in the last 24 hours",
-	"Criptomoedas mais pesquisadas pelos usuários nas últimas 24 horas": "Cryptocurrencies most searched by users in the last 24 hours"
+	"Criptomoedas mais pesquisadas pelos usuários nas últimas 24 horas": "Cryptocurrencies most searched by users in the last 24 hours",
+	"👋 Oi! Eu sou NEI Market AI, pergunte-me qualquer coisa sobre NEI Market Analytics!": "👋 Hi! I am NEI Market AI, ask me anything about NEI Market Analytics!",
+	"stock": "Stock",
+	"fund": "Fund",
+	"bdr": "Bdr",
+	"Outros": "Others",
+	"Escolha um Tipo de Gráfico": "Choose a Chart Type",
+	"Linha": "Line",
+	"Área": "Area",
+	"Barra": "Bar"
 }

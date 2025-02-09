@@ -12,7 +12,7 @@ const data = dataTreat(props.data);
 
 <template>
     <AreaChart :data="data" index="name" :categories="categories" :colors="colors" :filter-opacity="0.5"
-        :rounded-corners="4" :margin="{ top: 0, bottom: 0, left: 0, right: 0 }" :y-formatter="(tick, i) => {
+        :rounded-corners="4" :margin="{ top: 0, bottom: 0, left: 0, right: 0 }" :y-formatter="(tick, _i) => {
             return typeof tick === 'number'
                 ? numberFormatter(tick)
                 : ''

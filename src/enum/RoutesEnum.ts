@@ -80,8 +80,6 @@ export class RoutesEnum {
 		return RoutesEnum.getRouteMappings()[closestTextMatch as string];
 	}
 
-	// biome-ignore lint/complexity/noBannedTypes: <explanation>
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	public static findClosestIconMatch(
 		input: string,
 	): FunctionalComponent<Lucid.LucideProps, {}, any, {}> {

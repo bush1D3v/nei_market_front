@@ -16,9 +16,8 @@ import Image from "@/tags/Image.vue";
 import ChatDots from "../Loading/ChatDots.vue";
 import {useNewsStore} from "@/stores/useNewsStore";
 import type {New} from "@/types/Finnhub/New";
-import {listMarketNews} from "@/services/Finnhub";
 
-const newsStore = useNewsStore();
+const {news} = useNewsStore();
 
 const inputValue = ref<string>("");
 const loading = ref<boolean>(false);
@@ -33,8 +32,9 @@ function searchCrypto(input: string): void {
 	if (input.length === 0) return;
 
 	try {
-		const data = newsStore.searchNews(input) as New[];
-		searchResponse.value = data.slice(0, 7);
+		searchResponse.value = news.crypto
+			.filter((item) => item.headline.toLowerCase().includes(input.toLowerCase()))
+			.slice(0, 7);
 	} catch (err) {
 		console.error(err);
 		error.value = true;
@@ -53,12 +53,12 @@ function debounceSearch(input: string): void {
 	}, 500);
 }
 
-function saveToLocalStorage(searchCrypto: New): void {
-	if (!searchValue.some((item) => item.id === searchCrypto.id)) {
+function saveToLocalStorage(searchNew: New): void {
+	if (!searchValue.some((item) => item.id === searchNew.id)) {
 		if (searchValue.length === 4) {
 			searchValue.pop();
 		}
-		searchValue.unshift(searchCrypto);
+		searchValue.unshift(searchNew);
 	}
 	localStorage.setItem("searchNewValue", JSON.stringify(searchValue));
 	inputValue.value = "";
@@ -125,8 +125,8 @@ onMounted(() => {
                     <span v-if="error" v-translate>Erro Interno do Servidor</span>
                 </CommandEmpty>
                 <CommandGroup :heading="t('Sugestões')" v-if="inputValue.length === 0">
-                    <CommandItem v-for="(data) in newsStore.news.crypto.slice(0, 2)" :key="data.id"
-                        :value="data.headline" :to="data.url" @click="saveToLocalStorage(data)" target="_blank">
+                    <CommandItem v-for="(data) in news.crypto.slice(0, 2)" :key="data.id" :value="data.headline"
+                        :to="data.url" @click="saveToLocalStorage(data)" target="_blank">
                         <Image :alt="`${data.headline} image`" :src="data.image" width="28" height="28"
                             class="object-contain" />
                         <span class="ml-1 text-light line-clamp-1">{{ data.headline }}</span>

@@ -22,6 +22,7 @@ import {CheckIcon, ChevronDownIcon, ChevronUpIcon} from "@radix-icons/vue";
 import type {Stock} from "@/types/BrapiDev/Stock";
 import type {CryptoCurrency} from "@/types/CoinGecko/CryptoCurrency";
 import {useInfiniteQuery} from "@tanstack/vue-query";
+import {t} from "i18next";
 
 const {stocksCurrencies} = useStocksCurrencyStore();
 const {cryptoCurrencies} = useCryptoCurrencyStore();
@@ -325,6 +326,6 @@ onMounted(() => {
     <HomeDatasTableSkeleton v-else />
     <Button class="-mt-4" @click="dataType === 'cryptos' ? fetchNextCryptosPage() : fetchNextStocksPage()"
         :disabled="isFetchingNextStocksPage || isFetchingNextCryptosPage || isLoadingCryptos || isLoadingStocks">
-        {{ isFetchingNextStocksPage || isFetchingNextCryptosPage ? "Carregando..." : "Ver mais" }}
+        {{ isFetchingNextStocksPage || isFetchingNextCryptosPage ? t("Carregando...") : t("Ver mais") }}
     </Button>
 </template>

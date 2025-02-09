@@ -2,8 +2,6 @@
 import HomeTopsTable from "@/components/views/Home/HomeTopsTable.vue";
 import HomeTopsTableSkeleton from "@/components/Skeletons/components/views/Home/HomeTopsTable.vue";
 import HomeDatasTable from "@/components/views/Home/HomeDatasTable.vue";
-import type {New} from "@/types/Finnhub/New";
-import {onBeforeMount, ref} from "vue";
 import {getTrendingCryptos} from "@/services/CoinGecko";
 import {useCryptoCurrencyStore} from "@/stores/useCryptoCurrencyStore";
 import {listCompanyNews} from "@/services/Finnhub";
@@ -15,34 +13,28 @@ import BitcoinRocket from "@/assets/images/bitcoin-rocket.png";
 import BitcoinEscudo from "@/assets/images/bitcoin-escudo.png";
 import Card from "@/components/ui/card/Card.vue";
 import Image from "@/tags/Image.vue";
+import {useQuery} from "@tanstack/vue-query";
 
 const cryptoCurrencyStore = useCryptoCurrencyStore();
 const newsStore = useNewsStore();
 const stocksCurrencyStore = useStocksCurrencyStore();
 
-const onCryptoLoading = ref<boolean>(false);
-const onNewsLoading = ref<boolean>(false);
-const onStocksLoading = ref<boolean>(false);
+const {isLoading: onNewsLoading} = useQuery({
+	queryKey: ["news", "homeTops"],
+	queryFn: async () => await listCompanyNews(),
+	enabled: !newsStore.news.company.length,
+});
 
-onBeforeMount(async () => {
-	onNewsLoading.value = true;
-	onCryptoLoading.value = true;
-	onStocksLoading.value = true;
+const {isLoading: onCryptoLoading} = useQuery({
+	queryKey: ["cryptos", "homeTops"],
+	queryFn: async () => await getTrendingCryptos(),
+	enabled: !cryptoCurrencyStore.homeTopsTableCryptoCurrencies.length,
+});
 
-	if (!newsStore.news.company.length) {
-		(await listCompanyNews()) as New[];
-	}
-	onNewsLoading.value = false;
-
-	if (!stocksCurrencyStore.homeTopsTableStockCurrencies.length) {
-		await listStocks(5, 1, "change", "desc");
-	}
-	onStocksLoading.value = false;
-
-	if (!cryptoCurrencyStore.homeTopsTableCryptoCurrencies.length) {
-		await getTrendingCryptos();
-	}
-	onCryptoLoading.value = false;
+const {isLoading: onStocksLoading} = useQuery({
+	queryKey: ["stocks", "homeTops"],
+	queryFn: async () => await listStocks(5, 1, "change", "desc"),
+	enabled: !stocksCurrencyStore.homeTopsTableStockCurrencies.length,
 });
 </script>
 

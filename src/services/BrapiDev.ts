@@ -72,19 +72,11 @@ export async function stockDetail(
 ): Promise<DetailedStock | undefined> {
 	const url = `/quote/${ticker}?range=${range}&interval=${interval}&modules=summaryProfile`;
 	try {
-		let response = await get(url);
+		const response = await get(url);
 
 		if (!response.ok) throw new Error(await response.json());
 
-		let detailedStock: DetailedStock = await response.json();
-
-		let i = 0;
-		while (detailedStock.historicalDataPrice.length === 0 && i < 3) {
-			await new Promise((resolve) => setTimeout(resolve, 10000));
-			response = await get(url);
-			detailedStock = await response.json();
-			i++;
-		}
+		const detailedStock: DetailedStock = await response.json();
 
 		if (detailedStock.historicalDataPrice.length > 0) {
 			if (detailedStock.summaryProfile?.longBusinessSummary) {

@@ -3,18 +3,19 @@ import Button from "@/components/ui/button/Button.vue";
 import EntityCardSkeleton from "@/components/Skeletons/components/EntityCard.vue";
 import EntityCard from "@/components/EntityCard.vue";
 import InternalServerError from "@/views/Exceptions/InternalServerError.vue";
-import { listCryptoCurrencies } from "@/services/CoinGecko";
-import { useCryptoCurrencyStore } from "@/stores/useCryptoCurrencyStore";
-import { useInfiniteQuery } from "@tanstack/vue-query";
+import {listCryptoCurrencies} from "@/services/CoinGecko";
+import {useCryptoCurrencyStore} from "@/stores/useCryptoCurrencyStore";
+import {useInfiniteQuery} from "@tanstack/vue-query";
+import {t} from "i18next";
 
-const { cryptoCurrencies } = useCryptoCurrencyStore();
+const {cryptoCurrencies} = useCryptoCurrencyStore();
 
-const { error, fetchNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: [ "cryptos" ],
-    queryFn: async ({ pageParam }) => await listCryptoCurrencies(12, pageParam),
-    getNextPageParam: (_lastPage, allPages) => allPages.length + 1,
-    enabled: cryptoCurrencies.length === 0,
-    initialPageParam: cryptoCurrencies.length / 12 + 1,
+const {error, fetchNextPage, isLoading, isFetchingNextPage} = useInfiniteQuery({
+	queryKey: ["cryptos"],
+	queryFn: async ({pageParam}) => await listCryptoCurrencies(12, pageParam),
+	getNextPageParam: (_lastPage, allPages) => allPages.length + 1,
+	enabled: cryptoCurrencies.length === 0,
+	initialPageParam: cryptoCurrencies.length / 12 + 1,
 });
 </script>
 
@@ -29,8 +30,8 @@ const { error, fetchNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery
             <EntityCardSkeleton v-else v-for="i in 12" :key="i" />
         </ul>
         <div v-if="!error" class="flex justify-center mt-4">
-            <Button v-translate @click="async () => await fetchNextPage()" :disabled="isLoading || isFetchingNextPage">
-                {{ isFetchingNextPage ? 'Carregando...' : 'Carregar Mais' }}
+            <Button @click="async () => await fetchNextPage()" :disabled="isFetchingNextPage || isLoading">
+                {{ isFetchingNextPage ? t('Carregando...') : t('Carregar Mais') }}
             </Button>
         </div>
         <InternalServerError v-if="error" />

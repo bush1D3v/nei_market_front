@@ -10,24 +10,27 @@ import {useCurrencyQuotesStore} from "@/stores/useCurrencyQuotesStore";
 import {listCurrencyQuotes} from "@/services/CurrencyQuotes";
 import {Button} from "@/components/ui/button";
 import {CurrencyQuotesDtoValues} from "@/components/Dto/CurrencyQuotesDtoValues";
+import {useQuery} from "@tanstack/vue-query";
 
 const currencyQuotesStore = useCurrencyQuotesStore();
 
-const isLoading = ref(false);
 const isModalOpen = ref(false);
 const crossRateResult = ref<number>();
 
+const {data} = useQuery({
+	queryKey: ["currencyQuotes"],
+	queryFn: async () => await listCurrencyQuotes(),
+	enabled: !currencyQuotesStore.currencyQuotes,
+});
+
 async function calculateCrossRate(): Promise<void> {
-	isLoading.value = true;
 	let rates: Rates;
 
 	if (currencyQuotesStore.currencyQuotes?.rates) {
 		rates = currencyQuotesStore.currencyQuotes.rates;
 	} else {
-		const data = await listCurrencyQuotes();
-
-		if (data) {
-			rates = data.rates;
+		if (data.value) {
+			rates = data.value?.rates;
 		} else {
 			rates = CurrencyQuotesDtoValues;
 		}
@@ -37,7 +40,6 @@ async function calculateCrossRate(): Promise<void> {
 	const leftRate = rates[currencyQuotesStore.leftCode as keyof typeof rates];
 
 	crossRateResult.value = (rightRate / leftRate) * currencyQuotesStore.currency;
-	isLoading.value = false;
 	isModalOpen.value = true;
 }
 
@@ -105,7 +107,7 @@ watch(
                 <Dialog v-model:open="isModalOpen" :result="crossRateResult">
                     <template #trigger>
                         <Button v-translate class="w-full" @click="calculateCrossRate">
-                            {{ isLoading ? "Convertendo..." : "Converter" }}
+                            Converter
                         </Button>
                     </template>
                 </Dialog>

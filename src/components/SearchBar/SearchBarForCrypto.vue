@@ -13,8 +13,8 @@ import {
 	CommandDialog,
 } from "@/components/ui/command";
 import {useCryptoCurrencyStore} from "@/stores/useCryptoCurrencyStore";
-import type {SearchCrypto} from "@/types/CoinGecko/SearchCrypto";
 import {searchCryptos} from "@/services/CoinGecko";
+import {useQuery} from "@tanstack/vue-query";
 import Image from "@/tags/Image.vue";
 import ChatDots from "../Loading/ChatDots.vue";
 
@@ -30,38 +30,32 @@ interface StorageSearchCrypto {
 
 const {cryptoCurrencies} = useCryptoCurrencyStore();
 
-const inputValue = ref<string>("");
-const loading = ref<boolean>(false);
-const error = ref<boolean>(false);
-const searchResponse = ref<SearchCrypto[]>([]);
-
+const inputRef = ref<string>("");
+const hasSearched = ref(false);
 const searchValue = JSON.parse(
 	localStorage.getItem("searchCryptoValue") || "[]",
 ) as StorageSearchCrypto[];
-
+const isFocused = ref<boolean>(false);
 let debounceTimeout: NodeJS.Timeout;
 
-async function searchCrypto(input: string): Promise<void> {
-	if (input.length === 0) return;
-
-	try {
-		const data = (await searchCryptos(input)) as SearchCrypto[];
-		searchResponse.value = data;
-	} catch (err) {
-		console.error(err);
-		error.value = true;
-	} finally {
-		loading.value = false;
-	}
-}
+const {data, isRefetching, isRefetchError, refetch} = useQuery({
+	queryKey: ["cryptos", "searchBar"],
+	queryFn: async () => {
+		if (inputRef.value.length === 0) return;
+		return await searchCryptos(inputRef.value);
+	},
+	enabled: inputRef.value.length > 0,
+});
 
 function debounceSearch(input: string): void {
-	inputValue.value = input;
-	loading.value = true;
+	inputRef.value = input;
 
 	clearTimeout(debounceTimeout);
 	debounceTimeout = setTimeout(() => {
-		searchCrypto(input);
+		if (inputRef.value.length > 0) {
+			hasSearched.value = true;
+			refetch();
+		}
 	}, 500);
 }
 
@@ -73,14 +67,12 @@ function saveToLocalStorage(searchCrypto: StorageSearchCrypto): void {
 		searchValue.unshift(searchCrypto);
 	}
 	localStorage.setItem("searchCryptoValue", JSON.stringify(searchValue));
-	inputValue.value = "";
+	inputRef.value = "";
 	blur();
 }
 
-const isFocused = ref<boolean>(false);
-
 function focus() {
-	inputValue.value = "";
+	inputRef.value = "";
 	isFocused.value = true;
 }
 function blur() {
@@ -118,11 +110,12 @@ onMounted(() => {
         </kbd>
         <CommandDialog v-model:open="isFocused" :title="t('Pesquisar')">
             <div class="flex items-center border-b bg-darkAlt pl-4" cmdk-input-wrapper>
-                <CommandInput :placeholder="t('Pesquisar...')" @input="debounceSearch($event.target.value)"
-                    :icon-text="'light'" name="search" />
+                <CommandInput :placeholder="t('Pesquisar...')"
+                    @input="hasSearched = false, debounceSearch($event.target.value)" :icon-text="'light'"
+                    name="search" />
             </div>
             <CommandList>
-                <CommandGroup :heading="t('Recentes')" v-if="searchValue.length > 0 && inputValue.length === 0">
+                <CommandGroup :heading="t('Recentes')" v-if="searchValue.length > 0 && inputRef.length === 0">
                     <CommandItem @click="saveToLocalStorage(item)" v-for="item in searchValue" :key="item.id"
                         :to="`/cryptos/${item.id}`" :value="`${item.name} recent`">
                         <Image :alt="`${item.name} image`" :src="item.thumb" width="24" height="24" />
@@ -131,11 +124,15 @@ onMounted(() => {
                 </CommandGroup>
                 <CommandSeparator />
                 <CommandEmpty>
-                    <span v-if="!loading && !error" v-translate>Nenhum resultado encontrado.</span>
-                    <ChatDots v-if="loading && !error" />
-                    <span v-if="error" v-translate>Erro Interno do Servidor</span>
+                    <template v-if="inputRef.length > 0 && hasSearched">
+                        <ChatDots v-if="isRefetching" />
+                        <span v-else-if="isRefetchError" v-translate>Erro Interno do Servidor</span>
+                        <span v-else-if="data !== undefined && data.length === 0" v-translate>Nenhum resultado
+                            encontrado.</span>
+                    </template>
+                    <ChatDots v-else />
                 </CommandEmpty>
-                <CommandGroup :heading="t('Sugestões')" v-if="inputValue.length === 0">
+                <CommandGroup :heading="t('Sugestões')" v-if="inputRef.length === 0">
                     <CommandItem v-for="(data) in cryptoCurrencies.slice(0, 2)" :key="data.id" :value="data.name"
                         :to="`/cryptos/${data.id}`"
                         @click="saveToLocalStorage({ id: data.id, name: data.name, thumb: data.image })">
@@ -143,11 +140,11 @@ onMounted(() => {
                         <span class="ml-1 text-light">{{ data.name }}</span>
                     </CommandItem>
                 </CommandGroup>
-                <CommandGroup :heading="t('Recomendado')" v-if="inputValue.length > 0">
-                    <CommandItem v-if="!loading" v-for="data in searchResponse" :value="data.name"
-                        :to="`/cryptos/${data.id}`" @click="saveToLocalStorage(data)" :key="data.id">
-                        <Image :alt="`${data.name} image`" :src="data.thumb" width="24" height="24" />
-                        <span class="ml-1 text-light">{{ data.name }}</span>
+                <CommandGroup :heading="t('Recomendado')" v-if="inputRef.length > 0">
+                    <CommandItem v-if="!isRefetching" v-for="crypto in data" :value="crypto.name"
+                        :to="`/cryptos/${crypto.id}`" @click="saveToLocalStorage(crypto)" :key="crypto.id">
+                        <Image :alt="`${crypto.name} image`" :src="crypto.thumb" width="24" height="24" />
+                        <span class="ml-1 text-light">{{ crypto.name }}</span>
                     </CommandItem>
                 </CommandGroup>
             </CommandList>

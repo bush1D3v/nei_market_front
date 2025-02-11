@@ -3,65 +3,65 @@ import InternalServerError from "@/views/Exceptions/InternalServerError.vue";
 import numberFormatter from "@/utils/numberFormatter";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import transformDate from "@/utils/transformDate";
-import type { DetailedStock } from "@/types/BrapiDev/DetailedStock";
-import { stockDetail } from "@/services/BrapiDev";
-import { useStocksCurrencyStore } from "@/stores/useStocksCurrencyStore";
-import { useRoute } from "vue-router";
-import type { ChartData } from "@/components/Chart/types/ChartData";
+import type {DetailedStock} from "@/types/BrapiDev/DetailedStock";
+import {stockDetail} from "@/services/BrapiDev";
+import {useStocksCurrencyStore} from "@/stores/useStocksCurrencyStore";
+import {useRoute} from "vue-router";
+import type {ChartData} from "@/components/Chart/types/ChartData";
 import Image from "@/tags/Image.vue";
 import ValuesList from "./components/ValuesList.vue";
 import Link from "@/tags/Link.vue";
-import { HomeIcon } from "@radix-icons/vue";
+import {HomeIcon} from "@radix-icons/vue";
 import StockProfile from "./components/StockProfile.vue";
 import Charts from "./components/Charts.vue";
 import ArticleSkeleton from "@/components/Skeletons/components/views/BrapiDev/StockDetail/ArticleDescription.vue";
-import { useQuery } from "@tanstack/vue-query";
-import { t } from "i18next";
+import {useQuery} from "@tanstack/vue-query";
+import {t} from "i18next";
 
-const { params } = useRoute();
+const {params} = useRoute();
 const ticker = String(params.ticker);
 document.title = `${capitalizeFirstLetter(ticker)} | NEI Market Analytics`;
 const stocksCurrencyStore = useStocksCurrencyStore();
 
-const { error, isLoading, data } = useQuery({
-    queryKey: [ "stock", ticker ],
-    queryFn: async () => {
-        const stock = (await stockDetail(ticker)) as DetailedStock;
-        const treatedMaximumMinimum = mapToTreatedMaximumMinimumData(stock);
-        const treatedOpeningClosing = mapToTreatedOpeningClosingData(stock);
-        const treatedVolume = mapToTreatedVolumeData(stock);
-        return {
-            stock,
-            treatedMaximumMinimum,
-            treatedOpeningClosing,
-            treatedVolume,
-        };
-    },
-    enabled: !stocksCurrencyStore.getDetailedStock(ticker),
+const {error, isLoading, data} = useQuery({
+	queryKey: ["stock", ticker],
+	queryFn: async () => {
+		const stock = (await stockDetail(ticker)) as DetailedStock;
+		const treatedMaximumMinimum = mapToTreatedMaximumMinimumData(stock);
+		const treatedOpeningClosing = mapToTreatedOpeningClosingData(stock);
+		const treatedVolume = mapToTreatedVolumeData(stock);
+		return {
+			stock,
+			treatedMaximumMinimum,
+			treatedOpeningClosing,
+			treatedVolume,
+		};
+	},
+	enabled: !stocksCurrencyStore.getDetailedStock(ticker),
 });
 
 function mapToTreatedMaximumMinimumData(detailedStock: DetailedStock): ChartData[] {
-    return detailedStock.historicalDataPrice.map((data) => ({
-        dynamicParams: [ t("Máximo"), t("Mínimo") ],
-        chartData: [ numberFormatter(data.high), numberFormatter(data.low) ],
-        name: capitalizeFirstLetter(transformDate(data.date)),
-    }));
+	return detailedStock.historicalDataPrice.map((data) => ({
+		dynamicParams: [t("Máximo"), t("Mínimo")],
+		chartData: [numberFormatter(data.high), numberFormatter(data.low)],
+		name: capitalizeFirstLetter(transformDate(data.date)),
+	}));
 }
 
 function mapToTreatedOpeningClosingData(detailedStock: DetailedStock): ChartData[] {
-    return detailedStock.historicalDataPrice.map((data) => ({
-        dynamicParams: [ t("Abertura"), t("Fechamento") ],
-        chartData: [ data.open, data.close ],
-        name: capitalizeFirstLetter(transformDate(data.date)),
-    }));
+	return detailedStock.historicalDataPrice.map((data) => ({
+		dynamicParams: [t("Abertura"), t("Fechamento")],
+		chartData: [data.open, data.close],
+		name: capitalizeFirstLetter(transformDate(data.date)),
+	}));
 }
 
 function mapToTreatedVolumeData(detailedStock: DetailedStock): ChartData[] {
-    return detailedStock.historicalDataPrice.map((data) => ({
-        dynamicParams: [ t("Volume") ],
-        chartData: [ data.volume ],
-        name: capitalizeFirstLetter(transformDate(data.date)),
-    }));
+	return detailedStock.historicalDataPrice.map((data) => ({
+		dynamicParams: [t("Volume")],
+		chartData: [data.volume],
+		name: capitalizeFirstLetter(transformDate(data.date)),
+	}));
 }
 </script>
 

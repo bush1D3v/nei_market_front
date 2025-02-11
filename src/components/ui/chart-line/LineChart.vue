@@ -1,87 +1,87 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import type { BaseChartProps } from ".";
-import { ChartCrosshair, ChartLegend, defaultColors } from "@/components/ui/chart";
-import { cn } from "@/lib/utils";
-import { type BulletLegendItemInterface, CurveType } from "@unovis/ts";
-import { Axis, Line } from "@unovis/ts";
-import { VisAxis, VisLine, VisXYContainer } from "@unovis/vue";
-import { useMounted } from "@vueuse/core";
-import { type Component, computed, ref } from "vue";
+import type {BaseChartProps} from ".";
+import {ChartCrosshair, ChartLegend, defaultColors} from "@/components/ui/chart";
+import {cn} from "@/lib/utils";
+import {type BulletLegendItemInterface, CurveType} from "@unovis/ts";
+import {Axis, Line} from "@unovis/ts";
+import {VisAxis, VisLine, VisXYContainer} from "@unovis/vue";
+import {useMounted} from "@vueuse/core";
+import {type Component, computed, ref} from "vue";
 
 const props = withDefaults(
-    defineProps<
-        BaseChartProps<T> & {
-            /**
-             * Render custom tooltip component.
-             */
-            customTooltip?: Component;
-            /**
-             * Type of curve
-             */
-            curveType?: CurveType;
-        }
-    >(),
-    {
-        curveType: CurveType.MonotoneX,
-        filterOpacity: 0.2,
-        margin: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
-        showXAxis: true,
-        showYAxis: true,
-        showTooltip: true,
-        showLegend: true,
-        showGridLine: true,
-    },
+	defineProps<
+		BaseChartProps<T> & {
+			/**
+			 * Render custom tooltip component.
+			 */
+			customTooltip?: Component;
+			/**
+			 * Type of curve
+			 */
+			curveType?: CurveType;
+		}
+	>(),
+	{
+		curveType: CurveType.MonotoneX,
+		filterOpacity: 0.2,
+		margin: () => ({top: 0, bottom: 0, left: 0, right: 0}),
+		showXAxis: true,
+		showYAxis: true,
+		showTooltip: true,
+		showLegend: true,
+		showGridLine: true,
+	},
 );
 
 const emits = defineEmits<{
-    legendItemClick: [ d: BulletLegendItemInterface, i: number ];
+	legendItemClick: [d: BulletLegendItemInterface, i: number];
 }>();
 
 type KeyOfT = Extract<keyof T, string>;
-type Data = (typeof props.data)[ number ];
+type Data = (typeof props.data)[number];
 
 const index = computed(() => props.index as KeyOfT);
 const colors = computed(() =>
-    props.colors?.length ? props.colors : defaultColors(props.categories.length),
+	props.colors?.length ? props.colors : defaultColors(props.categories.length),
 );
 
 const legendItems = ref<BulletLegendItemInterface[]>(
-    props.categories.map((category, i) => ({
-        name: category,
-        color: colors.value[ i ],
-        inactive: false,
-    })),
+	props.categories.map((category, i) => ({
+		name: category,
+		color: colors.value[i],
+		inactive: false,
+	})),
 );
 
 const isMounted = useMounted();
 
 function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
-    emits("legendItemClick", d, i);
+	emits("legendItemClick", d, i);
 }
 
 function cleanNameKey(data) {
-    return data.map((item) => {
-        const { name, ...rest } = item;
+	return data.map((item) => {
+		const {name, ...rest} = item;
 
-        const dateTimePattern = /^\d{2}\/\d{2} - \d{2}:\d{2}:\d{2}$/;
-        const engDateTimePattern = /^\d{2}\/\d{2} - \d{2}:\d{2}:\d{2} [APM]{2}$/;
-        if (!dateTimePattern.test(name) && !engDateTimePattern.test(name)) {
-            return { ...rest, name };
-        }
+		const dateTimePattern = /^\d{2}\/\d{2} - \d{2}:\d{2}:\d{2}$/;
+		const engDateTimePattern = /^\d{2}\/\d{2} - \d{2}:\d{2}:\d{2} [APM]{2}$/;
+		if (!dateTimePattern.test(name) && !engDateTimePattern.test(name)) {
+			return {...rest, name};
+		}
 
-        const [ datePart ] = name.split(" - ");
-        const [ day, month ] = datePart.split("/").map(Number);
+		const [datePart] = name.split(" - ");
+		const [day, month] = datePart.split("/").map(Number);
 
-        const date = new Date(new Date().getFullYear(), month - 1, day);
+		const date = new Date(new Date().getFullYear(), month - 1, day);
 
-        const locale = navigator.language;
-        const formattedName = date.toLocaleDateString(locale, {
-            day: "2-digit",
-            month: "2-digit",
-        });
+		const locale = navigator.language;
+		const formattedName = date.toLocaleDateString(locale, {
+			day: "2-digit",
+			month: "2-digit",
+		});
 
-        return { ...rest, name: formattedName };
-    });
+		return {...rest, name: formattedName};
+	});
 }
 
 const cleanedData = cleanNameKey(props.data);

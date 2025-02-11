@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import generateContent, {type GenerateContentProps} from "@/services/Gemini";
+import generateContent from "@/services/Gemini";
 import socket from "@/server/Socket";
 import Button from "@/components/ui/button/Button.vue";
 import Image from "@/tags/Image.vue";
@@ -8,170 +8,159 @@ import LoadingDots from "./Loading/ChatDots.vue";
 import LikeImage from "@/assets/images/like.png";
 import DislikeImage from "@/assets/images/dislike.png";
 import useToastNotification from "@/notification/toast";
-import {v4 as uuidv4} from "uuid";
-import {ref, nextTick} from "vue";
+import { v4 as uuidv4 } from "uuid";
+import { ref, nextTick } from "vue";
 import {
-	Bot,
-	User,
-	BotMessageSquare,
-	Send,
-	RefreshCw,
-	Copy,
-	ThumbsDown,
-	ThumbsUp,
+    Bot,
+    User,
+    BotMessageSquare,
+    Send,
+    RefreshCw,
+    Copy,
+    ThumbsDown,
+    ThumbsUp,
 } from "lucide-vue-next";
-import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible";
-import {t} from "i18next";
-// import { useQuery } from "@tanstack/vue-query";
-
-// const { refetch } = useQuery({
-//     queryKey: [ 'generateContent' ],
-//     queryFn: async () => generateContent(),
-// });
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { t } from "i18next";
+import { useQuery } from "@tanstack/vue-query";
 
 interface Message {
-	text: string;
-	sender: "ai" | "user";
-	refs: string[];
-	first?: boolean;
-	isLiked?: boolean;
-	isDisliked?: boolean;
+    text: string;
+    sender: "ai" | "user";
+    refs: string[];
+    first?: boolean;
+    isLiked?: boolean;
+    isDisliked?: boolean;
 }
 
 const defaultMessage: Message = {
-	text: "👋 Oi! Eu sou NEI Market AI, pergunte-me qualquer coisa sobre NEI Market Analytics!",
-	sender: "ai",
-	refs: [],
-	first: true,
+    text: "👋 Oi! Eu sou NEI Market AI, pergunte-me qualquer coisa sobre NEI Market Analytics!",
+    sender: "ai",
+    refs: [],
+    first: true,
 };
 
 const prompt = ref("");
-const messages = ref<Message[]>([defaultMessage]);
-const loading = ref(false);
-const error = ref(false);
+const messages = ref<Message[]>([ defaultMessage ]);
 const sessionId = ref(uuidv4());
 const isOpen = ref(false);
+const resend = ref(false);
+
+const { isRefetchError, isRefetching, refetch } = useQuery({
+    queryKey: [ "generateContent", messages.value.length ],
+    queryFn: async () => {
+        const lastUserMessage = [ ...messages.value ]
+            .reverse()
+            .find((message) => message.sender === "user");
+
+        const userMessage = resend.value ? (lastUserMessage?.text as string) : prompt.value;
+        if (userMessage.trim() === "" && !resend.value) return;
+
+        const lastBotMessage = [ ...messages.value ]
+            .reverse()
+            .find((message) => message.sender === "ai");
+
+        if (resend.value) {
+            messages.value.pop();
+        } else {
+            messages.value.push({ text: userMessage, sender: "user", refs: [] });
+            nextTick(() => {
+                const messagesContainer = document.querySelector(".chat-messages");
+                if (messagesContainer) {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            });
+        }
+        prompt.value = "";
+        resend.value = false;
+        return await generateContent({
+            prompt: userMessage,
+            sessionId: sessionId.value,
+            lastUserMessage: lastUserMessage?.text || "null",
+            lastBotMessage: lastBotMessage?.text,
+            likeOrDislikePreviousMessage: lastBotMessage?.isLiked
+                ? true
+                : lastBotMessage?.isDisliked
+                    ? false
+                    : undefined,
+        });
+    },
+    enabled: false,
+});
 
 let aiMessage = "";
 
 function copyToClipboard(text: string) {
-	navigator.clipboard
-		.writeText(text)
-		.then(() => {
-			useToastNotification("Texto copiado para a área de transferência");
-		})
-		.catch((_e) => {
-			useToastNotification("Erro ao copiar texto para a área de transferência");
-		});
+    navigator.clipboard
+        .writeText(text)
+        .then(() => {
+            useToastNotification("Texto copiado para a área de transferência");
+        })
+        .catch((_e) => {
+            useToastNotification("Erro ao copiar texto para a área de transferência");
+        });
 }
 
 function toggleLike(message: Message) {
-	message.isLiked = !message.isLiked;
-	if (message.isLiked) {
-		message.isDisliked = false;
-	}
+    message.isLiked = !message.isLiked;
+    if (message.isLiked) {
+        message.isDisliked = false;
+    }
 }
 
 function toggleDislike(message: Message) {
-	message.isDisliked = !message.isDisliked;
-	if (message.isDisliked) {
-		message.isLiked = false;
-	}
+    message.isDisliked = !message.isDisliked;
+    if (message.isDisliked) {
+        message.isLiked = false;
+    }
 }
 
 function refresh() {
-	sessionId.value = uuidv4();
-	aiMessage = "";
-	messages.value = [defaultMessage];
-	useToastNotification("Chat recarregado");
-}
-
-async function sendMessage(resendMessage?: boolean) {
-	loading.value = true;
-
-	const lastUserMessage = [...messages.value]
-		.reverse()
-		.find((message) => message.sender === "user");
-
-	const userMessage = resendMessage ? (lastUserMessage?.text as string) : prompt.value;
-	if (userMessage.trim() === "" && !resendMessage) return;
-
-	const lastBotMessage = [...messages.value].reverse().find((message) => message.sender === "ai");
-
-	if (resendMessage) {
-		messages.value.pop();
-	} else {
-		messages.value.push({text: userMessage, sender: "user", refs: []});
-		nextTick(() => {
-			const messagesContainer = document.querySelector(".chat-messages");
-			if (messagesContainer) {
-				messagesContainer.scrollTop = messagesContainer.scrollHeight;
-			}
-		});
-	}
-	prompt.value = "";
-
-	try {
-		const data: GenerateContentProps = {
-			prompt: userMessage,
-			sessionId: sessionId.value,
-			lastUserMessage: lastUserMessage?.text || "null",
-			lastBotMessage: lastBotMessage?.text,
-			likeOrDislikePreviousMessage: lastBotMessage?.isLiked
-				? true
-				: lastBotMessage?.isDisliked
-					? false
-					: undefined,
-		};
-
-		await generateContent(data);
-	} catch (error) {
-		console.error(error);
-	}
+    sessionId.value = uuidv4();
+    aiMessage = "";
+    messages.value = [ defaultMessage ];
+    useToastNotification("Chat recarregado");
 }
 
 function adjustTextareaHeight(event: Event) {
-	const textarea = event.target as HTMLTextAreaElement;
-	textarea.style.height = "auto";
-	textarea.style.height = `${textarea.scrollHeight}px`;
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
 }
 
 socket.on("content", (data) => {
-	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-	if (data.sessionId == sessionId.value) {
-		aiMessage += data.text;
-		if (
-			messages.value.length > 0 &&
-			messages.value[messages.value.length - 1].sender === "ai"
-		) {
-			messages.value[messages.value.length - 1].text = aiMessage;
-		} else {
-			messages.value.push({text: aiMessage, sender: "ai", refs: data.refs});
-		}
-		loading.value = false;
-	}
+    // biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+    if (data.sessionId == sessionId.value) {
+        aiMessage += data.text;
+        if (
+            messages.value.length > 0 &&
+            messages.value[ messages.value.length - 1 ].sender === "ai"
+        ) {
+            messages.value[ messages.value.length - 1 ].text = aiMessage;
+        } else {
+            messages.value.push({ text: aiMessage, sender: "ai", refs: data.refs });
+        }
+    }
 });
 
 socket.on("content_end", (requestSessionId) => {
-	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-	if (requestSessionId == sessionId.value) {
-		aiMessage = "";
-		nextTick(() => {
-			const messagesContainer = document.querySelector(".chat-messages");
-			if (messagesContainer) {
-				messagesContainer.scrollTop = messagesContainer.scrollHeight;
-			}
-		});
-	}
+    // biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+    if (requestSessionId == sessionId.value) {
+        aiMessage = "";
+        nextTick(() => {
+            const messagesContainer = document.querySelector(".chat-messages");
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        });
+    }
 });
 
 socket.on("error", (data) => {
-	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-	if (data.sessionId == sessionId.value) {
-		error.value = true;
-		loading.value = false;
-		console.error(data.error);
-	}
+    // biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+    if (data.sessionId == sessionId.value) {
+        console.error(data.error);
+    }
 });
 </script>
 
@@ -190,7 +179,7 @@ socket.on("error", (data) => {
                             height="40" />
                         <h6>NEI Market AI</h6>
                     </div>
-                    <button title="Refresh chat" @click="refresh" :disabled="messages.length === 1 || loading"
+                    <button title="Refresh chat" @click="refresh" :disabled="messages.length === 1 || isRefetching"
                         class="disabled:opacity-50 hover:opacity-50 duration-150 ease-in-out">
                         <RefreshCw :size="20" :stroke-width="3" />
                     </button>
@@ -218,22 +207,22 @@ socket.on("error", (data) => {
                                     v-else />
                             </button>
                             <button title="Refresh message" v-if="index === messages.length - 1"
-                                @click="sendMessage(true)">
+                                @click="resend = true, refetch()">
                                 <RefreshCw :size="16" />
                             </button>
                         </div>
                     </li>
-                    <LoadingDots v-if="loading && !error" />
-                    <p v-if="error" class="text-negative">Erro ao gerar conteúdo, tente novamente mais tarde!</p>
+                    <LoadingDots v-if="isRefetching && !isRefetchError" />
+                    <p v-if="isRefetchError" class="text-negative">Erro ao gerar conteúdo, tente novamente mais tarde!
+                    </p>
                 </ul>
                 <div class="chat-input">
                     <textarea name="Espaço para escrever sua Mensagem" class="flex w-full" maxlength="1000"
-                        v-model="prompt" @input="adjustTextareaHeight" @keyup.enter="sendMessage()"
+                        v-model="prompt" @input="adjustTextareaHeight" @keyup.enter="refetch()"
                         :placeholder="t('Digite sua mensagem...')" />
                     <Button title="NEI Market AI Chat"
                         class="p-2 absolute right-4 bottom-[10px] dark:hover:bg-black/25 hover:bg-slate-100"
-                        variant="ghost" @click="() => { error = false, sendMessage() }"
-                        :disabled="loading || prompt.trim() === ''">
+                        variant="ghost" @click="() => { refetch() }" :disabled="isRefetching || prompt.trim() === ''">
                         <Send :size="20" color="var(--text)" :stroke-width="2.5" />
                     </Button>
                 </div>

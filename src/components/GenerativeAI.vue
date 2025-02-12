@@ -8,159 +8,159 @@ import LoadingDots from "./Loading/ChatDots.vue";
 import LikeImage from "@/assets/images/like.png";
 import DislikeImage from "@/assets/images/dislike.png";
 import useToastNotification from "@/notification/toast";
-import { v4 as uuidv4 } from "uuid";
-import { ref, nextTick } from "vue";
+import {v4 as uuidv4} from "uuid";
+import {ref, nextTick} from "vue";
 import {
-    Bot,
-    User,
-    BotMessageSquare,
-    Send,
-    RefreshCw,
-    Copy,
-    ThumbsDown,
-    ThumbsUp,
+	Bot,
+	User,
+	BotMessageSquare,
+	Send,
+	RefreshCw,
+	Copy,
+	ThumbsDown,
+	ThumbsUp,
 } from "lucide-vue-next";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { t } from "i18next";
-import { useQuery } from "@tanstack/vue-query";
+import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible";
+import {t} from "i18next";
+import {useQuery} from "@tanstack/vue-query";
 
 interface Message {
-    text: string;
-    sender: "ai" | "user";
-    refs: string[];
-    first?: boolean;
-    isLiked?: boolean;
-    isDisliked?: boolean;
+	text: string;
+	sender: "ai" | "user";
+	refs: string[];
+	first?: boolean;
+	isLiked?: boolean;
+	isDisliked?: boolean;
 }
 
 const defaultMessage: Message = {
-    text: "👋 Oi! Eu sou NEI Market AI, pergunte-me qualquer coisa sobre NEI Market Analytics!",
-    sender: "ai",
-    refs: [],
-    first: true,
+	text: "👋 Oi! Eu sou NEI Market AI, pergunte-me qualquer coisa sobre NEI Market Analytics!",
+	sender: "ai",
+	refs: [],
+	first: true,
 };
 
 const prompt = ref("");
-const messages = ref<Message[]>([ defaultMessage ]);
+const messages = ref<Message[]>([defaultMessage]);
 const sessionId = ref(uuidv4());
 const isOpen = ref(false);
 const resend = ref(false);
 
-const { isRefetchError, isRefetching, refetch } = useQuery({
-    queryKey: [ "generateContent", messages.value.length ],
-    queryFn: async () => {
-        const lastUserMessage = [ ...messages.value ]
-            .reverse()
-            .find((message) => message.sender === "user");
+const {isRefetchError, isRefetching, refetch} = useQuery({
+	queryKey: ["generateContent", messages.value.length],
+	queryFn: async () => {
+		const lastUserMessage = [...messages.value]
+			.reverse()
+			.find((message) => message.sender === "user");
 
-        const userMessage = resend.value ? (lastUserMessage?.text as string) : prompt.value;
-        if (userMessage.trim() === "" && !resend.value) return;
+		const userMessage = resend.value ? (lastUserMessage?.text as string) : prompt.value;
+		if (userMessage.trim() === "" && !resend.value) return;
 
-        const lastBotMessage = [ ...messages.value ]
-            .reverse()
-            .find((message) => message.sender === "ai");
+		const lastBotMessage = [...messages.value]
+			.reverse()
+			.find((message) => message.sender === "ai");
 
-        if (resend.value) {
-            messages.value.pop();
-        } else {
-            messages.value.push({ text: userMessage, sender: "user", refs: [] });
-            nextTick(() => {
-                const messagesContainer = document.querySelector(".chat-messages");
-                if (messagesContainer) {
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
-            });
-        }
-        prompt.value = "";
-        resend.value = false;
-        return await generateContent({
-            prompt: userMessage,
-            sessionId: sessionId.value,
-            lastUserMessage: lastUserMessage?.text || "null",
-            lastBotMessage: lastBotMessage?.text,
-            likeOrDislikePreviousMessage: lastBotMessage?.isLiked
-                ? true
-                : lastBotMessage?.isDisliked
-                    ? false
-                    : undefined,
-        });
-    },
-    enabled: false,
+		if (resend.value) {
+			messages.value.pop();
+		} else {
+			messages.value.push({text: userMessage, sender: "user", refs: []});
+			nextTick(() => {
+				const messagesContainer = document.querySelector(".chat-messages");
+				if (messagesContainer) {
+					messagesContainer.scrollTop = messagesContainer.scrollHeight;
+				}
+			});
+		}
+		prompt.value = "";
+		resend.value = false;
+		return await generateContent({
+			prompt: userMessage,
+			sessionId: sessionId.value,
+			lastUserMessage: lastUserMessage?.text || "null",
+			lastBotMessage: lastBotMessage?.text,
+			likeOrDislikePreviousMessage: lastBotMessage?.isLiked
+				? true
+				: lastBotMessage?.isDisliked
+					? false
+					: undefined,
+		});
+	},
+	enabled: false,
 });
 
 let aiMessage = "";
 
 function copyToClipboard(text: string) {
-    navigator.clipboard
-        .writeText(text)
-        .then(() => {
-            useToastNotification("Texto copiado para a área de transferência");
-        })
-        .catch((_e) => {
-            useToastNotification("Erro ao copiar texto para a área de transferência");
-        });
+	navigator.clipboard
+		.writeText(text)
+		.then(() => {
+			useToastNotification("Texto copiado para a área de transferência");
+		})
+		.catch((_e) => {
+			useToastNotification("Erro ao copiar texto para a área de transferência");
+		});
 }
 
 function toggleLike(message: Message) {
-    message.isLiked = !message.isLiked;
-    if (message.isLiked) {
-        message.isDisliked = false;
-    }
+	message.isLiked = !message.isLiked;
+	if (message.isLiked) {
+		message.isDisliked = false;
+	}
 }
 
 function toggleDislike(message: Message) {
-    message.isDisliked = !message.isDisliked;
-    if (message.isDisliked) {
-        message.isLiked = false;
-    }
+	message.isDisliked = !message.isDisliked;
+	if (message.isDisliked) {
+		message.isLiked = false;
+	}
 }
 
 function refresh() {
-    sessionId.value = uuidv4();
-    aiMessage = "";
-    messages.value = [ defaultMessage ];
-    useToastNotification("Chat recarregado");
+	sessionId.value = uuidv4();
+	aiMessage = "";
+	messages.value = [defaultMessage];
+	useToastNotification("Chat recarregado");
 }
 
 function adjustTextareaHeight(event: Event) {
-    const textarea = event.target as HTMLTextAreaElement;
-    textarea.style.height = "auto";
-    textarea.style.height = `${textarea.scrollHeight}px`;
+	const textarea = event.target as HTMLTextAreaElement;
+	textarea.style.height = "auto";
+	textarea.style.height = `${textarea.scrollHeight}px`;
 }
 
 socket.on("content", (data) => {
-    // biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-    if (data.sessionId == sessionId.value) {
-        aiMessage += data.text;
-        if (
-            messages.value.length > 0 &&
-            messages.value[ messages.value.length - 1 ].sender === "ai"
-        ) {
-            messages.value[ messages.value.length - 1 ].text = aiMessage;
-        } else {
-            messages.value.push({ text: aiMessage, sender: "ai", refs: data.refs });
-        }
-    }
+	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+	if (data.sessionId == sessionId.value) {
+		aiMessage += data.text;
+		if (
+			messages.value.length > 0 &&
+			messages.value[messages.value.length - 1].sender === "ai"
+		) {
+			messages.value[messages.value.length - 1].text = aiMessage;
+		} else {
+			messages.value.push({text: aiMessage, sender: "ai", refs: data.refs});
+		}
+	}
 });
 
 socket.on("content_end", (requestSessionId) => {
-    // biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-    if (requestSessionId == sessionId.value) {
-        aiMessage = "";
-        nextTick(() => {
-            const messagesContainer = document.querySelector(".chat-messages");
-            if (messagesContainer) {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-        });
-    }
+	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+	if (requestSessionId == sessionId.value) {
+		aiMessage = "";
+		nextTick(() => {
+			const messagesContainer = document.querySelector(".chat-messages");
+			if (messagesContainer) {
+				messagesContainer.scrollTop = messagesContainer.scrollHeight;
+			}
+		});
+	}
 });
 
 socket.on("error", (data) => {
-    // biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-    if (data.sessionId == sessionId.value) {
-        console.error(data.error);
-    }
+	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+	if (data.sessionId == sessionId.value) {
+		console.error(data.error);
+	}
 });
 </script>
 

@@ -23,7 +23,12 @@ interface HttpRequestOptions {
 async function httpRequest(url: string, options: HttpRequestOptions): Promise<Response> {
 	const headers = {...DEFAULT_HEADERS, ...options.headers};
 
-	return await fetch(`${SERVER_HOST}${SERVER_PORT}${url}`, {
+	const path =
+		import.meta.env.VITE_AMBIENT === "development"
+			? `${SERVER_HOST}${SERVER_PORT}${url}`
+			: `${SERVER_HOST}${url}`;
+
+	return await fetch(path, {
 		method: options.method,
 		headers: headers,
 		body: options.body ? JSON.stringify(options.body) : null,

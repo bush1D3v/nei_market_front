@@ -7,6 +7,7 @@ interface ImportMetaEnv {
 	readonly VITE_SERVER_PORT: number;
 	readonly VITE_SOCKET_HOST: string;
 	readonly VITE_SOCKET_PORT: number;
+	readonly VITE_AMBIENT: string;
 }
 
 interface ImportMeta {

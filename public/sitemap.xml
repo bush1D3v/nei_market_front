@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://localhost:5173/</loc>
+    <loc>https://nei-market-analytics.vercel.app/</loc>
     <lastmod>2023-10-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://localhost:5173/about-us</loc>
+    <loc>https://nei-market-analytics.vercel.app/about-us</loc>
     <lastmod>2023-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://localhost:5173/cryptos</loc>
+    <loc>https://nei-market-analytics.vercel.app/cryptos</loc>
     <lastmod>2023-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://localhost:5173/coins</loc>
+    <loc>https://nei-market-analytics.vercel.app/coins</loc>
     <lastmod>2023-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://localhost:5173/more</loc>
+    <loc>https://nei-market-analytics.vercel.app/more</loc>
     <lastmod>2023-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://localhost:5173/privacy-policy</loc>
+    <loc>https://nei-market-analytics.vercel.app/privacy-policy</loc>
     <lastmod>2023-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://localhost:5173/cookie-policy</loc>
+    <loc>https://nei-market-analytics.vercel.app/cookie-policy</loc>
     <lastmod>2023-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://localhost:5173/stocks</loc>
+    <loc>https://nei-market-analytics.vercel.app/stocks</loc>
     <lastmod>2023-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://localhost:5173/news</loc>
+    <loc>https://nei-market-analytics.vercel.app/news</loc>
     <lastmod>2023-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://localhost:5173/cryptos/:crypto</loc>
+    <loc>https://nei-market-analytics.vercel.app/cryptos/:crypto</loc>
     <lastmod>2023-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://localhost:5173/stocks/:stock</loc>
+    <loc>https://nei-market-analytics.vercel.app/stocks/:stock</loc>
     <lastmod>2023-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

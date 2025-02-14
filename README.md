@@ -100,7 +100,7 @@ ENG 🇺🇸
 
 ## 🔍 About the Project
 
-The **NEI Market Analytics** is an open-source project designed to provide comprehensive market value analyses for various financial instruments and digital assets. This repository aims to create a robust platform for tracking and analyzing market trends across multiple sectors.
+The **NEI Market Analytics** is an project designed to provide comprehensive market value analyses for various financial instruments and digital assets. This repository aims to create a robust platform for tracking and analyzing market trends across multiple sectors.
 
 ## 🛠️ Technologies and Tools Used
 

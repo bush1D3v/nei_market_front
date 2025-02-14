@@ -23,7 +23,7 @@ interface HttpRequestOptions {
 async function httpRequest(url: string, options: HttpRequestOptions): Promise<Response> {
 	const headers = {...DEFAULT_HEADERS, ...options.headers};
 
-	return await fetch(`${SERVER_HOST}:${SERVER_PORT}${url}`, {
+	return await fetch(`${SERVER_HOST}${SERVER_PORT}${url}`, {
 		method: options.method,
 		headers: headers,
 		body: options.body ? JSON.stringify(options.body) : null,

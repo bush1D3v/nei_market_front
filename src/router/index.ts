@@ -33,7 +33,7 @@ const router = createRouter({
 				ogDescription:
 					"Welcome to NEI Market Analytics, your source for comprehensive market analysis.",
 				ogImage: "/logo.svg",
-				ogUrl: `${VITE_HOST}:${VITE_PORT}/`,
+				ogUrl: `${VITE_HOST}${VITE_PORT}/`,
 			},
 		},
 		{
@@ -49,7 +49,7 @@ const router = createRouter({
 				ogTitle: "About Us | NEI Market Analytics",
 				ogDescription: "Learn more about NEI Market Analytics and our mission.",
 				ogImage: "/logo.svg",
-				ogUrl: `${VITE_HOST}:${VITE_PORT}/about-us`,
+				ogUrl: `${VITE_HOST}${VITE_PORT}/about-us`,
 			},
 		},
 		{
@@ -68,7 +68,7 @@ const router = createRouter({
 				ogDescription:
 					"See more details about NEI Market Analytics, your policies, contacts, configurations, and more.",
 				ogImage: "/logo.svg",
-				ogUrl: `${VITE_HOST}:${VITE_PORT}/more`,
+				ogUrl: `${VITE_HOST}${VITE_PORT}/more`,
 			},
 		},
 		{
@@ -84,7 +84,7 @@ const router = createRouter({
 				ogTitle: "Privacy Policy | NEI Market Analytics",
 				ogDescription: "Learn more about our privacy policy.",
 				ogImage: "/logo.svg",
-				ogUrl: `${VITE_HOST}:${VITE_PORT}/privacy-policy`,
+				ogUrl: `${VITE_HOST}${VITE_PORT}/privacy-policy`,
 			},
 		},
 		{
@@ -100,7 +100,7 @@ const router = createRouter({
 				ogTitle: "Cookie Policy | NEI Market Analytics",
 				ogDescription: "Learn more about our cookie policy.",
 				ogImage: "/logo.svg",
-				ogUrl: `${VITE_HOST}:${VITE_PORT}/cookie-policy`,
+				ogUrl: `${VITE_HOST}${VITE_PORT}/cookie-policy`,
 			},
 		},
 		{
@@ -116,7 +116,7 @@ const router = createRouter({
 				ogTitle: "Crypto | NEI Market Analytics",
 				ogDescription: "Explore our comprehensive list of crypto assets.",
 				ogImage: "/logo.svg",
-				ogUrl: `${VITE_HOST}:${VITE_PORT}/cryptos`,
+				ogUrl: `${VITE_HOST}${VITE_PORT}/cryptos`,
 			},
 		},
 		{
@@ -132,7 +132,7 @@ const router = createRouter({
 				ogTitle: "Stocks | NEI Market Analytics",
 				ogDescription: "Explore our comprehensive list of stocks.",
 				ogImage: "/logo.svg",
-				ogUrl: `${VITE_HOST}:${VITE_PORT}/stocks`,
+				ogUrl: `${VITE_HOST}${VITE_PORT}/stocks`,
 			},
 		},
 		{
@@ -148,7 +148,7 @@ const router = createRouter({
 				ogTitle: "News | NEI Market Analytics",
 				ogDescription: "Explore our comprehensive list of news.",
 				ogImage: "/logo.svg",
-				ogUrl: `${VITE_HOST}:${VITE_PORT}/news`,
+				ogUrl: `${VITE_HOST}${VITE_PORT}/news`,
 			},
 		},
 		{
@@ -162,7 +162,7 @@ const router = createRouter({
 				ogTitle: "Crypto | NEI Market Analytics",
 				ogDescription: "Explore our comprehensive crypto.",
 				ogImage: "/logo.svg",
-				ogUrl: `${VITE_HOST}:${VITE_PORT}/cryptos/:crypto`,
+				ogUrl: `${VITE_HOST}${VITE_PORT}/cryptos/:crypto`,
 			},
 			props: (route) => ({key: route.params.crypto}),
 		},
@@ -177,7 +177,7 @@ const router = createRouter({
 				ogTitle: "Stocks | NEI Market Analytics",
 				ogDescription: "Explore our comprehensive list of stocks.",
 				ogImage: "/logo.svg",
-				ogUrl: `${VITE_HOST}:${VITE_PORT}/stocks/:ticker`,
+				ogUrl: `${VITE_HOST}${VITE_PORT}/stocks/:ticker`,
 			},
 			props: (route) => ({key: route.params.ticker}),
 		},
@@ -194,7 +194,7 @@ const router = createRouter({
 				ogTitle: "Currency Converter | NEI Market Analytics",
 				ogDescription: "Currency Converter",
 				ogImage: "/logo.svg",
-				ogUrl: `${VITE_HOST}:${VITE_PORT}/tools/currency-converter`,
+				ogUrl: `${VITE_HOST}${VITE_PORT}/tools/currency-converter`,
 			},
 		},
 		{
@@ -209,7 +209,7 @@ const router = createRouter({
 				ogTitle: "404 | NEI Market Analytics",
 				ogDescription: "Page not found",
 				ogImage: "/logo.svg",
-				ogUrl: `${VITE_HOST}:${VITE_PORT}/`,
+				ogUrl: `${VITE_HOST}${VITE_PORT}/`,
 			},
 		},
 	],
